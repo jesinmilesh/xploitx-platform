@@ -2,8 +2,9 @@ import datetime
 import logging
 import os
 import sys
+import uuid
 
-from flask import abort, redirect, render_template, request, session, url_for
+from flask import abort, g, redirect, render_template, request, session, url_for
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
@@ -403,11 +404,45 @@ def init_request_processors(app):
                 if session["nonce"] != request.form.get("nonce"):
                     abort(403)
 
+    @app.before_request
+    def correlation_id():
+        g.request_id = request.headers.get("X-Request-ID") or uuid.uuid4().hex
+
     @app.after_request
     def response_headers(response):
         response.headers["Cross-Origin-Opener-Policy"] = get_app_config(
             "CROSS_ORIGIN_OPENER_POLICY", default="same-origin-allow-popups"
         )
+        response.headers["X-Request-ID"] = getattr(g, "request_id", "")
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+
+        # HSTS enforcement when on HTTPS or SESSION_COOKIE_SECURE
+        if request.is_secure or app.config.get("SESSION_COOKIE_SECURE"):
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+
+        # Content Security Policy (allows self, trusted CDNs, fonts, and inline styles for dynamic theming)
+        if "Content-Security-Policy" not in response.headers:
+            response.headers["Content-Security-Policy"] = (
+                "default-src 'self'; "
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; "
+                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; "
+                "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; "
+                "img-src 'self' data: https: blob:; "
+                "connect-src 'self' wss: https:; "
+                "frame-ancestors 'none'; "
+                "object-src 'none'; "
+                "base-uri 'self';"
+            )
+
+        # Cache-Control: Prevent caching of sensitive data for authenticated sessions
+        from CTFd.utils.user import authed
+        if authed():
+            response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0"
+            response.headers["Pragma"] = "no-cache"
+
         return response
 
     if application_root != "/":

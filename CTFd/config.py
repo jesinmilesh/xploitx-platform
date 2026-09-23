@@ -163,6 +163,13 @@ class ServerConfig(object):
         CACHE_THRESHOLD: int = 0
 
     # === SECURITY ===
+    SESSION_COOKIE_SECURE: bool = process_boolean_str(
+        empty_str_cast(
+            os.getenv("SESSION_COOKIE_SECURE", config_ini["security"].get("SESSION_COOKIE_SECURE", None)),
+            default=(os.getenv("ENVIRONMENT") == "production")
+        )
+    )
+
     SESSION_COOKIE_HTTPONLY: bool = config_ini["security"].getboolean("SESSION_COOKIE_HTTPONLY", fallback=True)
 
     SESSION_COOKIE_SAMESITE: str = empty_str_cast(config_ini["security"]["SESSION_COOKIE_SAMESITE"]) \
@@ -291,8 +298,10 @@ class ServerConfig(object):
 
     if DATABASE_URL.startswith("sqlite") is False:
         SQLALCHEMY_ENGINE_OPTIONS = {
-            "max_overflow": int(empty_str_cast(config_ini["optional"]["SQLALCHEMY_MAX_OVERFLOW"], default=20)),  # noqa: E131
-            "pool_pre_ping": empty_str_cast(config_ini["optional"]["SQLALCHEMY_POOL_PRE_PING"], default=True),  # noqa: E131
+            "pool_size": int(empty_str_cast(config_ini["optional"].get("SQLALCHEMY_POOL_SIZE"), default=20)),
+            "max_overflow": int(empty_str_cast(config_ini["optional"].get("SQLALCHEMY_MAX_OVERFLOW"), default=10)),
+            "pool_pre_ping": empty_str_cast(config_ini["optional"].get("SQLALCHEMY_POOL_PRE_PING"), default=True),
+            "pool_recycle": int(empty_str_cast(config_ini["optional"].get("SQLALCHEMY_POOL_RECYCLE"), default=3600)),
         }
 
     # === OAUTH ===

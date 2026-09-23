@@ -537,24 +537,28 @@ def themes_beta(theme, path):
     abort(404)
 
 
+@views.route("/health")
 @views.route("/healthcheck")
 def healthcheck():
-    if check_database() is False:
-        return "ERR", 500
-    if check_config() is False:
-        return "ERR", 500
-    return "OK", 200
+    db_ok = check_database()
+    cache_ok = check_config()
+    status_code = 200 if (db_ok and cache_ok) else 503
+    return {
+        "status": "healthy" if status_code == 200 else "unhealthy",
+        "database": "up" if db_ok else "down",
+        "cache": "up" if cache_ok else "down",
+    }, status_code
 
 
 @views.route("/debug")
 def debug():
-    if app.config.get("SAFE_MODE") is True:
+    # Never expose debug information in production
+    if app.debug or (app.config.get("SAFE_MODE") is True and app.config.get("ENVIRONMENT") != "production"):
         ip = get_ip()
         headers = dict(request.headers)
-        # Remove Cookie item
         headers.pop("Cookie", None)
-        resp = ""
-        resp += f"IP: {ip}\n"
+        headers.pop("Authorization", None)
+        resp = f"IP: {ip}\n"
         for k, v in headers.items():
             resp += f"{k}: {v}\n"
         r = make_response(resp)
