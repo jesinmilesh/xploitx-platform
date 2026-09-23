@@ -1,0 +1,14 @@
+.venv
+.git
+.gitignore
+scratch
+tests
+.pytest_cache
+node_modules
+docker-compose.yml
+Dockerfile
+.dockerignore
+*.log
+.system_generated
+.tempmediaStorage
+.user_uploaded

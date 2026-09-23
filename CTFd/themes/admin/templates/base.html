@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Admin Panel</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="{{ url_for('views.themes_beta', theme='xploitx', path='img/Favicon.jpeg') }}?v=3" type="image/jpeg">
+	<link rel="icon" href="{{ url_for('views.themes_beta', theme='xploitx', path='img/Favicon.jpeg') }}?v=3" type="image/jpeg">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Cinzel+Decorative:wght@700;900&family=Inter:wght@400;500;600;700&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	{{ Assets.css("assets/css/main.scss", theme="admin") }}
+	{{ Assets.css("assets/css/fonts.scss", theme="admin") }}
+	{{ Assets.css("assets/css/admin.scss", theme="admin") }}
+	<link rel="stylesheet" href="{{ url_for('views.themes_beta', theme='xploitx', path='css/xploitx-admin.css') }}?v=5.1">
+	<style>
+		html, body {
+			background-color: #03040a !important;
+			color: #f0f4fc !important;
+		}
+		main[role="main"] {
+			background-color: transparent !important;
+			min-height: calc(100vh - 128px) !important;
+		}
+		.table-responsive, table, tbody, tr, td, th {
+			background-color: transparent;
+		}
+	</style>
+	<script type="text/javascript">
+		var init = {
+			'urlRoot': "{{ request.script_root }}",
+			'csrfNonce': "{{ Session.nonce }}",
+			'userMode': "{{ Configs.user_mode }}",
+			'userId': {{ Session.id }},
+			'userName': {{ User.name | tojson }},
+			'userEmail': {{ User.email | tojson }},
+			'teamId': {{ Team.id | tojson }}, 
+			'teamName': {{ Team.name | tojson }},
+			'start': {{ Configs.start | tojson }},
+			'end': {{ Configs.end | tojson }}
+		}
+	</script>
+	{% block stylesheets %} {% endblock %}
+	{% for stylesheet in get_registered_admin_stylesheets() %}
+		{% if stylesheet.startswith('http') %}
+			<link rel="stylesheet" type="text/css" href="{{ stylesheet }}">
+		{% elif request.script_root %}
+			<link rel="stylesheet" type="text/css" href="{{ request.script_root }}/{{ stylesheet }}">
+		{% else %}
+			<link rel="stylesheet" type="text/css" href="{{ stylesheet }}">
+		{% endif %}
+	{% endfor %}
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-xl navbar-dark bg-dark fixed-top">
+		<div class="container-fluid px-3">
+			<a href="{{ url_for('views.static_html', route='/') }}" class="navbar-brand">
+				<img class="img-responsive ctf_logo me-2" src="{{ url_for('views.themes_beta', theme='xploitx', path='img/xploitx_logo.png') }}" alt="XPLOITX" height="26" style="vertical-align: middle; filter: drop-shadow(0 0 6px rgba(0, 255, 102, 0.45));">
+				<span class="xploitx-nav-title">XPLOITX ADMIN</span>
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#base-navbars"
+					aria-controls="base-navbars" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="base-navbars">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item"><a class="nav-link" href="{{ url_for('admin.statistics') }}"><i class="fas fa-chart-line me-1 text-info"></i> Statistics</a></li>
+					<li class="nav-item"><a class="nav-link" href="{{ url_for('admin.notifications') }}"><i class="fas fa-bell me-1 text-warning"></i> Notifications</a></li>
+					<li class="nav-item dropdown">
+						<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"><i class="fas fa-file-code me-1"></i> Pages</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="{{ url_for('admin.pages_listing') }}">All Pages</a>
+							<a class="dropdown-item" href="{{ url_for('admin.pages_new') }}">New Page</a>
+						</div>
+					</li>
+					<li class="nav-item"><a class="nav-link" href="{{ url_for('admin.users_listing') }}"><i class="fas fa-user-ninja me-1 text-success"></i> Users</a></li>
+					{% if get_config('user_mode') == 'teams' %}
+					<li class="nav-item"><a class="nav-link" href="{{ url_for('admin.teams_listing') }}"><i class="fas fa-users me-1 text-info"></i> Teams</a></li>
+					{% endif %}
+					<li class="nav-item"><a class="nav-link" href="{{ url_for('admin.scoreboard_listing') }}"><i class="fas fa-trophy me-1 text-warning"></i> Scoreboard</a></li>
+					<li class="nav-item"><a class="nav-link" href="{{ url_for('admin.challenges_listing') }}"><i class="fas fa-flag me-1 text-success"></i> Challenges</a></li>
+					<li class="nav-item"><a class="nav-link" href="{{ url_for('admin.modules_listing') }}"><i class="fas fa-cubes me-1"></i> Modules</a></li>
+					<li class="nav-item"><a class="nav-link" href="{{ url_for('admin.audiences_listing') }}"><i class="fas fa-satellite-dish me-1"></i> Audiences</a></li>
+					<li class="nav-item dropdown">
+						<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+						   aria-haspopup="true" aria-expanded="true"><i class="fas fa-list-check me-1 text-info"></i> Submissions</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="{{ url_for('admin.submissions_listing') }}">All Submissions</a>
+							<a class="dropdown-item" href="{{ url_for('admin.submissions_listing', submission_type='correct') }}">Correct Submissions</a>
+							<a class="dropdown-item" href="{{ url_for('admin.submissions_listing', submission_type='incorrect') }}">Incorrect Submissions</a>
+						</div>
+					</li>
+					<li class="nav-item"><a class="nav-link" href="{{ url_for('admin.config') }}"><i class="fas fa-cog me-1 text-muted"></i> Config</a></li>
+
+					{% set plugin_menu = get_admin_plugin_menu_bar() %}
+					{% set plugins = get_menubar_plugins() %}
+					{% if plugin_menu or plugins %}
+						<li class="nav-item">
+							<a class="nav-link d-none d-md-block d-lg-block">|</a>
+						</li>
+
+						{% for menu in plugin_menu %}
+							{% if request.script_root %}
+								{% set route = '/' + request.script_root + '/' + menu.route %}
+							{% else %}
+								{% set route = menu.route %}
+							{% endif %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{ route }}" {% if menu.link_target %}target="{{ menu.link_target }}"{% endif %}>
+									{{ menu.title }}
+								</a>
+							</li>
+						{% endfor %}
+
+						{% if plugins %}
+						<li class="nav-item dropdown">
+							<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Plugins <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+									{% for plugin in plugins %}
+											<a class="dropdown-item" href="{{ request.script_root }}{{ plugin.route }}">{{ plugin.name }}</a>
+									{% endfor %}
+							</ul>
+						</li>
+						{% endif %}
+					{% endif %}
+				</ul>
+				<ul class="nav navbar-nav navbar-right align-items-center">
+					<li class="nav-item">
+						<a class="nav-link text-success" href="{{ url_for('views.static_html', route='/') }}" title="Return to CTF Site">
+							<i class="fas fa-external-link-alt me-1"></i> <span class="d-none d-lg-inline">Arena</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="https://docs.ctfd.io/" target="_blank" title="CTFd Documentation">
+							<i class="far fa-question-circle"></i>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<main role="main">
+		{% if get_config('version_latest') %}
+		<div class="container-fluid bg-warning text-center py-3">
+			<div class="row">
+				<div class="col-md-12">
+					<a class="btn btn-warning" href="{{ get_config('version_latest') }}">
+						A new CTFd version is available!
+					</a>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+		{% block content %}
+		{% endblock %}
+	</main>
+
+	<footer class="footer xploitx-footer py-3 mt-auto">
+		<div class="container text-center">
+			<div class="footer-badge mb-1">
+				<span class="hud-tag"><i class="fas fa-shield-alt text-success me-1"></i> XPLOITX 2.0 BETA • ADMIN CONSOLE</span>
+				<span class="text-muted mx-2">•</span>
+				<span class="text-muted small">DEPARTMENT OF CYBER SECURITY • PRATHYUSHA ENGINEERING COLLEGE</span>
+			</div>
+			<div>
+				<a href="https://xploitxctf.me" target="_blank" class="text-info me-3 text-decoration-none small">
+					<i class="fas fa-globe me-1"></i> xploitxctf.me
+				</a>
+				<a href="https://ctfd.io" target="_blank" class="text-secondary text-decoration-none small">
+					<small class="text-muted">Powered by CTFd</small>
+				</a>
+				<span>
+					<small class="text-muted mx-2">•</small>
+					<small class="text-muted">v{{ get_config('ctf_version') }}</small>
+				</span>
+			</div>
+		</div>
+	</footer>
+
+	{% block entrypoint %}
+		{{ Assets.js("assets/js/pages/main.js", theme="admin") }}
+	{% endblock %}
+
+	{% block scripts %} {% endblock %}
+
+	{% for script in get_registered_admin_scripts() %}
+		{% if script.startswith('http') %}
+			<script defer src="{{ script }}"></script>
+		{% elif request.script_root %}
+			<script defer src="{{ request.script_root }}/{{ script }}"></script>
+		{% else %}
+			<script defer src="{{ script }}"></script>
+		{% endif %}
+	{% endfor %}
+</body>
+
+</html>

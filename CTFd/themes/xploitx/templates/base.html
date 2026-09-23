@@ -1,0 +1,84 @@
+<html data-bs-theme="dark">
+<head>
+  <title>{{ title or Configs.ctf_name }}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="{{ url_for('views.themes_beta', theme='xploitx', path='img/Favicon.jpeg') }}?v=3" type="image/jpeg">
+  <link rel="icon" href="{{ url_for('views.themes_beta', theme='xploitx', path='img/Favicon.jpeg') }}?v=3" type="image/jpeg">
+
+  {{ meta | safe }}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Cinzel+Decorative:wght@700;900&family=Inter:wght@400;500;600;700&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  {% block stylesheets %}
+    {{ Assets.css("assets/scss/main.scss") }}
+  {% endblock %}
+  <link rel="stylesheet" href="{{ url_for('views.themes_beta', theme='xploitx', path='css/xploitx.css') }}?v=5.1">
+
+  {{ Plugins.styles }}
+
+  <script type="text/javascript">
+      window.init = {
+          'urlRoot': "{{ request.script_root }}",
+          'csrfNonce': "{{ Session.nonce }}",
+          'userMode': "{{ Configs.user_mode }}",
+          'userId': {{ Session.id }},
+          'userName': {{ User.name | tojson }},
+          'userEmail': {{ User.email | tojson }},
+          'userVerified': {{ User.verified | tojson }},
+          'teamId': {{ Team.id | tojson }},
+          'teamName': {{ Team.name | tojson }},
+          'start': {{ Configs.start | tojson }},
+          'end': {{ Configs.end | tojson }},
+          'themeSettings': {{ Configs.theme_settings | tojson }},
+          'eventSounds': [
+            "/themes/core/static/sounds/notification.webm",
+            "/themes/core/static/sounds/notification.mp3",
+          ],
+      }
+  </script>
+
+  {{ Configs.theme_header }}
+</head>
+<body>
+{% include "components/navbar.html" %}
+
+<main role="main">
+  {% block content %}
+  {% endblock %}
+</main>
+
+{% include "components/snackbar.html" %}
+
+<footer class="footer xploitx-footer py-4 mt-auto">
+  <div class="container text-center">
+    <div class="footer-badge mb-2">
+      <span class="hud-tag"><i class="fas fa-shield-alt text-success me-1"></i> XPLOITX 2.0 BETA</span>
+      <span class="text-muted mx-2">•</span>
+      <span class="text-muted small">DEPARTMENT OF CYBER SECURITY • PRATHYUSHA ENGINEERING COLLEGE</span>
+    </div>
+    <div class="small">
+      <a href="https://xploitxctf.me" target="_blank" class="text-info me-3 text-decoration-none">
+        <i class="fas fa-globe me-1"></i> xploitxctf.me
+      </a>
+      <a href="https://ctfd.io" target="_blank" class="text-secondary text-decoration-none">
+        <small class="text-muted">{% trans %}Powered by CTFd{% endtrans %}</small>
+      </a>
+    </div>
+  </div>
+</footer>
+
+{% include "components/notifications.html" %}
+
+{% block scripts %}
+  {{ Assets.js("assets/js/page.js") }}
+{% endblock %}
+
+{{ Plugins.scripts }}
+
+{{ Configs.theme_footer }}
+</body>
+</html>
