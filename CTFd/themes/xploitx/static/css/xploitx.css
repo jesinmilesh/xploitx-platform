@@ -272,14 +272,15 @@ a:hover {
 /* Buttons */
 .btn {
     font-family: var(--font-title) !important;
-    letter-spacing: 1.8px !important;
+    letter-spacing: 1.2px !important;
     text-transform: uppercase !important;
     font-weight: 700 !important;
     border-radius: 4px !important;
-    padding: 10px 22px !important;
+    padding: 10px 20px !important;
     transition: all 0.3s ease !important;
     position: relative;
-    overflow: hidden;
+    white-space: normal;
+    word-break: normal;
 }
 
 .btn-primary,
@@ -798,3 +799,118 @@ main, main[role="main"] {
     text-transform: uppercase !important;
     white-space: nowrap;
 }
+
+/* ==========================================================================
+   Email Verification & Confirm UI System
+   ========================================================================== */
+.xploitx-confirm-card {
+    background: rgba(8, 14, 28, 0.88) !important;
+    border: 1px solid rgba(0, 255, 102, 0.35) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 255, 102, 0.1) !important;
+    border-radius: 8px !important;
+    margin: 1rem auto 3rem;
+    max-width: 680px;
+    width: 100%;
+}
+
+.xploitx-confirm-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(0, 255, 102, 0.1);
+    border: 1px solid var(--doom-green);
+    color: var(--doom-green);
+    font-size: 1.85rem;
+    box-shadow: 0 0 20px var(--doom-green-glow);
+    margin-bottom: 1.5rem;
+}
+
+.xploitx-confirm-title {
+    font-family: var(--font-heading) !important;
+    font-size: clamp(1.15rem, 2vw, 1.45rem) !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase !important;
+    color: #ffffff !important;
+    text-shadow: 0 0 12px rgba(0, 255, 102, 0.3);
+    margin-bottom: 1rem;
+}
+
+.xploitx-confirm-lead {
+    font-family: var(--font-body) !important;
+    font-size: clamp(0.92rem, 1.2vw, 1.02rem) !important;
+    color: #e2e8f0 !important;
+    text-transform: none !important;
+    letter-spacing: 0.3px !important;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.xploitx-confirm-box {
+    background: rgba(12, 20, 38, 0.75);
+    border: 1px solid rgba(0, 210, 255, 0.3);
+    border-left: 3px solid var(--electric-blue);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    text-align: left;
+    margin-bottom: 2rem;
+    font-family: var(--font-body) !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+}
+
+.xploitx-confirm-box p {
+    color: #cbd5e1;
+    line-height: 1.5;
+    font-size: 0.88rem;
+}
+
+.xploitx-confirm-btn-group {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.xploitx-confirm-btn {
+    flex: 1 1 0;
+    min-height: 48px;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 10px 16px !important;
+    font-size: clamp(0.74rem, 1vw, 0.86rem) !important;
+    letter-spacing: 1.2px !important;
+    line-height: 1.3 !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow: visible !important;
+    box-sizing: border-box;
+}
+
+.xploitx-otp-input {
+    font-family: 'Share Tech Mono', Consolas, monospace !important;
+    font-size: 26px !important;
+    letter-spacing: 8px !important;
+    text-align: center;
+    color: var(--doom-green) !important;
+    background: rgba(4, 8, 16, 0.8) !important;
+    border: 2px dashed var(--doom-green) !important;
+    max-width: 280px;
+    border-radius: 6px;
+}
+
+@media (max-width: 576px) {
+    .xploitx-confirm-btn-group {
+        flex-direction: column;
+    }
+    .xploitx-confirm-btn {
+        width: 100%;
+    }
+}
+
