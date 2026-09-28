@@ -160,7 +160,7 @@ class ThemeLoader(FileSystemLoader):
             if self.theme_name != ADMIN_THEME:
                 raise jinja2.TemplateNotFound(template)
             template = template[len(self._ADMIN_THEME_PREFIX) :]
-        theme_name = self.theme_name or str(utils.get_config("ctf_theme"))
+        theme_name = self.theme_name or str(utils.get_config("ctf_theme") or DEFAULT_THEME)
         template = safe_join(theme_name, "templates", template)
         return super(ThemeLoader, self).get_source(environment, template)
 

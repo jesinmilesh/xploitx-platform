@@ -1,5 +1,4 @@
 {% extends "admin/base.html" %}
-{% from "admin/macros/challenges.html" import challenge_state_badge %}
 
 {% block stylesheets %}
 	{{ Assets.css("assets/css/challenge-board.scss", theme="admin") }}
@@ -73,8 +72,11 @@
 			<h1 class="text-center">{{ challenge.name }}</h1>
 			<h2 class="text-center">{{ challenge.category }}</h2>
 			<h2 class="text-center">{{ challenge.type }}</h2>
+			{% set badge_state = 'badge-danger' if challenge.state == 'hidden' else 'badge-success' %}
 			<h5>
-				{{ challenge_state_badge(challenge, classes="challenge-state") }}
+				<span class="badge {{ badge_state }} challenge-state">
+					{{ challenge.state }}
+				</span>
 			</h5>
 			<h3 class="text-center">{{ challenge.value }} points</h3>
 			<div class="pt-3">

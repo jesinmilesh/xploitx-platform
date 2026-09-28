@@ -10,7 +10,7 @@ from CTFd.utils.modes import TEAMS_MODE, USERS_MODE
 
 def ctf_name():
     name = get_config("ctf_name")
-    return name if name else "CTFd"
+    return name if name else "xploitxctf"
 
 
 def user_mode():
@@ -31,13 +31,15 @@ def ctf_logo():
 
 def ctf_theme():
     theme = get_config("ctf_theme")
-    return theme if theme else ""
+    return theme if theme else DEFAULT_THEME
 
 
 def ctf_theme_candidates():
     yield ctf_theme()
     if bool(get_app_config("THEME_FALLBACK")):
         yield DEFAULT_THEME
+        if DEFAULT_THEME != "core":
+            yield "core"
 
 
 def is_setup():
