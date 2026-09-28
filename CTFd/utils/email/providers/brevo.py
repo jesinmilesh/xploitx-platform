@@ -1,4 +1,6 @@
+import os
 import requests
+
 from CTFd.utils import get_app_config, get_config
 from CTFd.utils.email.providers import EmailProvider
 

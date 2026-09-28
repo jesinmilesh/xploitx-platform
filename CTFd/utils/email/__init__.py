@@ -96,7 +96,7 @@ def forgot_password(email):
 
 def verify_email_address(addr):
     token = generate_email_confirm_token(addr)
-    otp = get_otp_for_confirm_token(token) or "780808"
+    otp = get_otp_for_confirm_token(token)
     confirm_url = url_for(
         "auth.confirm",
         data=token,
