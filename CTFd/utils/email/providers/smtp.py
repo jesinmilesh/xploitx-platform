@@ -9,7 +9,7 @@ from CTFd.utils.email.providers import EmailProvider
 
 class SMTPEmailProvider(EmailProvider):
     @staticmethod
-    def sendmail(addr, text, subject):
+    def sendmail(addr, text, subject, html=None):
         sender_name = (
             get_config("mail_sender_name")
             or get_app_config("MAIL_SENDER_NAME")
@@ -58,6 +58,8 @@ class SMTPEmailProvider(EmailProvider):
 
             msg = EmailMessage()
             msg.set_content(text)
+            if html:
+                msg.add_alternative(html, subtype="html")
 
             msg["Subject"] = subject
             msg["From"] = mailfrom_addr

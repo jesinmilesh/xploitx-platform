@@ -5,7 +5,7 @@ from CTFd.utils.email.providers import EmailProvider
 
 class BrevoEmailProvider(EmailProvider):
     @staticmethod
-    def sendmail(addr, text, subject):
+    def sendmail(addr, text, subject, html=None):
         sender_name = (
             get_config("mail_sender_name")
             or get_app_config("MAIL_SENDER_NAME")
@@ -43,6 +43,9 @@ class BrevoEmailProvider(EmailProvider):
             "subject": subject,
             "textContent": text,
         }
+
+        if html:
+            payload["htmlContent"] = html
 
         try:
             r = requests.post(

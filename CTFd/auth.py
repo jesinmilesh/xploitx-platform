@@ -99,6 +99,37 @@ def confirm(data=None):
 
     if data is None:
         if request.method == "POST":
+            otp = request.form.get("otp", "").strip()
+            if otp:
+                try:
+                    verified_email = verify_email_confirm_token(otp)
+                    if verified_email == user.email:
+                        user.verified = True
+                        log(
+                            "registrations",
+                            format="[{date}] {ip} - successful OTP confirmation for {name}",
+                            name=user.name,
+                        )
+                        db.session.commit()
+                        remove_email_confirm_token(otp)
+                        clear_user_session(user_id=user.id)
+                        if get_config("verify_emails"):
+                            email.successful_registration_notification(user.email)
+                        db.session.close()
+                        if current_user.authed():
+                            return redirect(url_for("challenges.listing"))
+                        return redirect(url_for("auth.login"))
+                    else:
+                        return render_template(
+                            "confirm.html",
+                            errors=["Invalid verification code. Please check and try again."],
+                        )
+                except UserConfirmTokenInvalidException:
+                    return render_template(
+                        "confirm.html",
+                        errors=["Invalid or expired verification code. Please check your code or request a new one."],
+                    )
+
             # User wants to resend their confirmation email
             email.verify_email_address(user.email)
             log(
