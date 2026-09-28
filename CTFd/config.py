@@ -211,6 +211,8 @@ class ServerConfig(object):
 
     MAIL_PROVIDER: str = empty_str_cast(config_ini["email"].get("MAIL_PROVIDER"))
 
+    BREVO_API_KEY: str = empty_str_cast(config_ini["email"].get("BREVO_API_KEY"))
+
     # === LOGS ===
     LOG_FOLDER: str = empty_str_cast(config_ini["logs"]["LOG_FOLDER"]) \
         or os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")

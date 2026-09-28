@@ -78,6 +78,10 @@ CTFd/uploads
 *.log
 *.log.*
 
+# Environment files
+.env
+.env.*
+
 # CTFd exports
 *.zip
 
