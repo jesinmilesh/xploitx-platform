@@ -478,15 +478,13 @@
 {% endblock %}
 
 {% block scripts %}
+  <span id="team-stats-holder" class="d-none"
+        data-stats="{{ { 'type': 'team', 'id': team.id, 'name': team.name, 'account_id': 'me' } | tojson }}"
+        data-captain="{{ ((user.id == team.captain_id) if user else false) | tojson }}">
+  </span>
   <script>
-      window.stats_data = {{ {
-        'type': 'team',
-        'id': team.id,
-        'name': team.name,
-        'account_id': 'me',
-      } | tojson }};
-
-      window.team_captain = {{ ((user.id == team.captain_id) if user else false) | tojson }};
+      window.stats_data = JSON.parse(document.getElementById('team-stats-holder').getAttribute('data-stats'));
+      window.team_captain = JSON.parse(document.getElementById('team-stats-holder').getAttribute('data-captain'));
   </script>
   {{ Assets.js("assets/js/teams/private.js") }}
 {% endblock %}

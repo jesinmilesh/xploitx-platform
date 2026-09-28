@@ -242,13 +242,11 @@
 {% endblock %}
 
 {% block scripts %}
+  <span id="user-stats-holder" class="d-none"
+        data-user="{{ { 'type': 'user', 'id': user.id, 'name': user.name, 'account_id': user.id } | tojson }}">
+  </span>
   <script>
-      window.USER = {{ {
-      'type': 'user',
-      'id': user.id,
-      'name': user.name,
-      'account_id': user.id,
-    } | tojson }};
+      window.USER = JSON.parse(document.getElementById('user-stats-holder').getAttribute('data-user'));
   </script>
 
   {{ Assets.js("assets/js/users/private.js") }}
