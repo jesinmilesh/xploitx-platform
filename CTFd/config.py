@@ -189,6 +189,9 @@ class ServerConfig(object):
     MAILFROM_ADDR: str = config_ini["email"]["MAILFROM_ADDR"] \
         or "noreply@examplectf.com"
 
+    MAIL_SENDER_NAME: str = empty_str_cast(config_ini["email"].get("MAIL_SENDER_NAME")) \
+        or "XploitX 2.0 BETA"
+
     MAIL_SERVER: str = empty_str_cast(config_ini["email"]["MAIL_SERVER"])
 
     MAIL_PORT: int = empty_str_cast(config_ini["email"]["MAIL_PORT"])

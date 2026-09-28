@@ -6,7 +6,12 @@ from CTFd.utils.email.providers import EmailProvider
 class BrevoEmailProvider(EmailProvider):
     @staticmethod
     def sendmail(addr, text, subject):
-        ctf_name = get_config("ctf_name") or "XploitX"
+        sender_name = (
+            get_config("mail_sender_name")
+            or get_app_config("MAIL_SENDER_NAME")
+            or os.getenv("MAIL_SENDER_NAME")
+            or "XploitX 2.0 BETA"
+        )
         mailfrom_addr = (
             get_config("mailfrom_addr")
             or get_app_config("MAILFROM_ADDR")
@@ -29,7 +34,7 @@ class BrevoEmailProvider(EmailProvider):
 
         payload = {
             "sender": {
-                "name": ctf_name,
+                "name": sender_name,
                 "email": mailfrom_addr,
             },
             "to": [
