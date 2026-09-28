@@ -209,17 +209,6 @@ def setup():
         <span class="bullet">&bull;</span>
         <span class="sub-college">Prathyusha Engineering College</span>
     </div>
-    <div class="xploitx-hero-socials">
-        <a href="https://xploitxctf.me" target="_blank" title="Official Website" rel="noopener"><i class="fas fa-globe"></i></a>
-        <a href="https://github.com/jesinmilesh/xploitx-platform" target="_blank" title="GitHub Repository" rel="noopener"><i class="fab fa-github"></i></a>
-    </div>
-    <div class="xploitx-hero-cta">
-        <a href="admin" class="xploitx-admin-badge">
-            <i class="fas fa-terminal me-2 text-primary"></i>
-            <span>CLICK HERE TO ACCESS THE <strong class="xploitx-text-green">XPLOITXCTF ADMIN CONSOLE</strong></span>
-            <i class="fas fa-chevron-right ms-2 text-primary"></i>
-        </a>
-    </div>
 </div>"""
             page.content = index
 
