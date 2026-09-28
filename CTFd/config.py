@@ -189,6 +189,9 @@ class ServerConfig(object):
     MAILFROM_ADDR: str = config_ini["email"]["MAILFROM_ADDR"] \
         or "noreply@examplectf.com"
 
+    MAIL_SENDER_NAME: str = empty_str_cast(config_ini["email"].get("MAIL_SENDER_NAME")) \
+        or "XploitX 2.0 BETA"
+
     MAIL_SERVER: str = empty_str_cast(config_ini["email"]["MAIL_SERVER"])
 
     MAIL_PORT: int = empty_str_cast(config_ini["email"]["MAIL_PORT"])
@@ -210,6 +213,8 @@ class ServerConfig(object):
     MAILGUN_BASE_URL: str = empty_str_cast(config_ini["email"]["MAILGUN_API_KEY"])
 
     MAIL_PROVIDER: str = empty_str_cast(config_ini["email"].get("MAIL_PROVIDER"))
+
+    BREVO_API_KEY: str = empty_str_cast(config_ini["email"].get("BREVO_API_KEY"))
 
     # === LOGS ===
     LOG_FOLDER: str = empty_str_cast(config_ini["logs"]["LOG_FOLDER"]) \

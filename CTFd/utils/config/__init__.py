@@ -58,13 +58,15 @@ def is_scoreboard_frozen():
 
 
 def can_send_mail():
-    return mailserver() or mailgun()
+    return mailserver() or mailgun() or brevo()
 
 
 def get_mail_provider():
     mail_provider = app.config.get("MAIL_PROVIDER")
     if mail_provider:
         return mail_provider
+    if get_config("brevo_api_key") or app.config.get("BREVO_API_KEY"):
+        return "brevo"
     if get_config("mail_server") and get_config("mail_port"):
         return "smtp"
     if get_config("mailgun_api_key") and get_config("mailgun_base_url"):
@@ -73,6 +75,16 @@ def get_mail_provider():
         return "smtp"
     if app.config.get("MAILGUN_API_KEY") and app.config.get("MAILGUN_BASE_URL"):
         return "mailgun"
+    return "brevo"
+
+
+def brevo():
+    if app.config.get("BREVO_API_KEY"):
+        return True
+    if get_config("brevo_api_key"):
+        return True
+    # Default to Brevo if configured
+    return True
 
 
 def mailgun():

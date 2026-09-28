@@ -9,10 +9,15 @@ from CTFd.utils.email.providers import EmailProvider
 
 class SMTPEmailProvider(EmailProvider):
     @staticmethod
-    def sendmail(addr, text, subject):
-        ctf_name = get_config("ctf_name")
+    def sendmail(addr, text, subject, html=None):
+        sender_name = (
+            get_config("mail_sender_name")
+            or get_app_config("MAIL_SENDER_NAME")
+            or get_config("ctf_name")
+            or "XploitX 2.0 BETA"
+        )
         mailfrom_addr = get_config("mailfrom_addr") or get_app_config("MAILFROM_ADDR")
-        mailfrom_addr = formataddr((ctf_name, mailfrom_addr))
+        mailfrom_addr = formataddr((sender_name, mailfrom_addr))
 
         custom_smtp = bool(get_config("mail_server"))
         if custom_smtp:
@@ -53,6 +58,8 @@ class SMTPEmailProvider(EmailProvider):
 
             msg = EmailMessage()
             msg.set_content(text)
+            if html:
+                msg.add_alternative(html, subtype="html")
 
             msg["Subject"] = subject
             msg["From"] = mailfrom_addr
