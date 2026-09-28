@@ -198,20 +198,27 @@ def setup():
                 set_config("ctf_banner", f.location)
 
             # Splice in our banner
-            index = f"""<div class="row">
-    <div class="col-md-6 offset-md-3">
-        <img class="w-100 mx-auto d-block" style="max-width: 500px;padding: 50px;padding-top: 14vh;" src="{default_ctf_banner_location}" />
-        <h3 class="text-center">
-            <p>A cool CTF platform from <a href="https://ctfd.io">ctfd.io</a></p>
-            <p>Follow us on social media:</p>
-            <a href="https://twitter.com/ctfdio"><i class="fab fa-twitter fa-2x" aria-hidden="true"></i></a>&nbsp;
-            <a href="https://facebook.com/ctfdio"><i class="fab fa-facebook fa-2x" aria-hidden="true"></i></a>&nbsp;
-            <a href="https://github.com/ctfd"><i class="fab fa-github fa-2x" aria-hidden="true"></i></a>
-        </h3>
-        <br>
-        <h4 class="text-center">
-            <a href="admin">Click here</a> to login and setup your CTF
-        </h4>
+            index = f"""<div class="xploitx-hero">
+    <img class="xploitx-hero-logo" src="{default_ctf_banner_location}" alt="XPLOITX" />
+    <h1 class="xploitx-hero-title">
+        <span class="xploitx-hero-title-main">NEXT-GENERATION CYBERSECURITY PLATFORM</span>
+        <span class="xploitx-hero-title-by">BY <a href="https://xploitxctf.me" target="_blank" class="xploitx-hero-highlight">XPLOITXCTF</a></span>
+    </h1>
+    <div class="xploitx-hero-subtitle">
+        <span class="sub-dept">Department of Cyber Security</span>
+        <span class="bullet">&bull;</span>
+        <span class="sub-college">Prathyusha Engineering College</span>
+    </div>
+    <div class="xploitx-hero-socials">
+        <a href="https://xploitxctf.me" target="_blank" title="Official Website" rel="noopener"><i class="fas fa-globe"></i></a>
+        <a href="https://github.com/jesinmilesh/xploitx-platform" target="_blank" title="GitHub Repository" rel="noopener"><i class="fab fa-github"></i></a>
+    </div>
+    <div class="xploitx-hero-cta">
+        <a href="admin" class="xploitx-admin-badge">
+            <i class="fas fa-terminal me-2 text-primary"></i>
+            <span>CLICK HERE TO ACCESS THE <strong class="xploitx-text-green">XPLOITXCTF ADMIN CONSOLE</strong></span>
+            <i class="fas fa-chevron-right ms-2 text-primary"></i>
+        </a>
     </div>
 </div>"""
             page.content = index

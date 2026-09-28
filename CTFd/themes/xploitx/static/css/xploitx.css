@@ -607,3 +607,194 @@ main, main[role="main"] {
     border-color: var(--doom-green) !important;
     box-shadow: 0 0 20px var(--doom-green-glow) !important;
 }
+
+/* ==========================================================================
+   Hero & Auto-Fit Typography System
+   ========================================================================== */
+.xploitx-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: clamp(2rem, 5vh, 4rem) 1.25rem 2rem;
+    width: 100%;
+}
+
+.xploitx-hero-logo {
+    max-width: min(440px, 85vw);
+    height: auto;
+    margin-bottom: 2rem;
+    filter: drop-shadow(0 0 18px rgba(0, 255, 102, 0.45));
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.xploitx-hero-logo:hover {
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 26px rgba(0, 255, 102, 0.65));
+}
+
+.xploitx-hero-title {
+    font-family: var(--font-heading) !important;
+    font-size: clamp(1.05rem, 2.2vw, 1.85rem) !important;
+    font-weight: 800 !important;
+    letter-spacing: clamp(1px, 0.2vw, 2px) !important;
+    line-height: 1.4 !important;
+    text-transform: uppercase !important;
+    color: #ffffff !important;
+    text-shadow: 0 0 16px rgba(0, 255, 102, 0.25);
+    margin-bottom: 0.85rem !important;
+    text-wrap: balance;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0 8px;
+}
+
+.xploitx-hero-title-main {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.xploitx-hero-title-by {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .xploitx-hero-title-main {
+        white-space: normal;
+    }
+}
+
+.xploitx-hero-highlight {
+    background: linear-gradient(135deg, var(--doom-green) 0%, var(--electric-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 102, 0.35));
+    text-decoration: none !important;
+    font-weight: 900 !important;
+}
+
+.xploitx-hero-subtitle {
+    font-family: var(--font-tech), var(--font-mono) !important;
+    font-size: clamp(0.72rem, 1.1vw, 0.92rem) !important;
+    letter-spacing: clamp(1px, 0.15vw, 1.8px) !important;
+    line-height: 1.6 !important;
+    color: var(--text-muted) !important;
+    text-transform: uppercase !important;
+    margin-bottom: 1.75rem !important;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px 10px;
+}
+
+.xploitx-hero-subtitle .sub-dept,
+.xploitx-hero-subtitle .sub-college {
+    white-space: nowrap;
+}
+
+.xploitx-hero-subtitle .bullet {
+    color: var(--doom-green);
+    font-size: 0.7em;
+}
+
+@media (max-width: 576px) {
+    .xploitx-hero-subtitle .sub-dept,
+    .xploitx-hero-subtitle .sub-college {
+        white-space: normal;
+    }
+    .xploitx-hero-subtitle .bullet {
+        display: none;
+    }
+}
+
+.xploitx-hero-socials {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.xploitx-hero-socials a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(12, 18, 38, 0.75);
+    border: 1px solid var(--border-cyan);
+    color: var(--electric-blue);
+    font-size: 1.25rem;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 12px rgba(0, 210, 255, 0.2);
+}
+
+.xploitx-hero-socials a:hover {
+    background: rgba(0, 255, 102, 0.18);
+    border-color: var(--doom-green);
+    color: #ffffff;
+    box-shadow: 0 0 20px var(--doom-green-glow);
+    transform: translateY(-3px);
+}
+
+.xploitx-hero-cta {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    max-width: 100%;
+}
+
+.xploitx-admin-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: rgba(10, 18, 32, 0.85);
+    border: 1px solid rgba(0, 255, 102, 0.4);
+    border-radius: 6px;
+    color: #e0f2fe !important;
+    font-family: var(--font-tech), var(--font-mono) !important;
+    font-size: clamp(0.75rem, 1.1vw, 0.92rem) !important;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    text-decoration: none !important;
+    box-shadow: 0 0 16px rgba(0, 255, 102, 0.15), inset 0 0 12px rgba(0, 255, 102, 0.05);
+    transition: all 0.25s ease;
+    max-width: 100%;
+}
+
+.xploitx-admin-badge:hover {
+    background: rgba(0, 255, 102, 0.15);
+    border-color: var(--doom-green);
+    color: #ffffff !important;
+    box-shadow: 0 0 24px rgba(0, 255, 102, 0.4), inset 0 0 16px rgba(0, 255, 102, 0.1);
+    transform: translateY(-2px);
+}
+
+.xploitx-text-green {
+    color: var(--doom-green) !important;
+    text-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
+}
+
+.xploitx-hero-cta .btn {
+    font-family: var(--font-title) !important;
+    letter-spacing: 1.5px !important;
+    font-size: clamp(0.78rem, 1.1vw, 0.92rem) !important;
+    padding: 10px 24px !important;
+    border-radius: 4px !important;
+    text-transform: uppercase !important;
+    white-space: nowrap;
+}
