@@ -3,25 +3,41 @@
 {% block content %}
 	<div class="jumbotron">
 		<div class="container">
+			<div class="section-tag mb-2">
+				<span class="pulse-dot"></span> [ TRANSMISSION LOGS // BROADCASTS ]
+			</div>
 			<h1>
 				{% trans %}Notifications{% endtrans %}
 			</h1>
+			<p class="text-muted font-monospace small">
+				Official broadcasts, critical intel updates, and mission announcements.
+			</p>
 		</div>
 	</div>
 	<div class="container">
 		{% if not notifications %}
-		<h2 class="text-center">
-			{% trans %}There are no notifications yet{% endtrans %}
-		</h2>
+			<div class="hud-panel text-center py-5">
+				<i class="fas fa-satellite-dish fa-3x text-muted mb-3"></i>
+				<h3 class="text-center text-muted font-monospace">
+					[ {% trans %}There are no notifications yet{% endtrans %} ]
+				</h3>
+				<p class="text-muted small">
+					All tactical transmission channels are currently quiet.
+				</p>
+			</div>
 		{% endif %}
 		{% for notification in notifications %}
-		<div class="card bg-body-tertiary mb-4">
-			<div class="card-body">
-				<h3 class="card-title">{{ notification.title }}</h3>
-				<blockquote class="blockquote mb-0">
-					<p>{{ notification.html }}</p>
-					<small class="text-muted"><span data-time="{{ notification.date | isoformat }}"></span></small>
-				</blockquote>
+		<div class="hud-panel mb-4">
+			<div class="d-flex align-items-center justify-content-between mb-2 pb-2 border-bottom border-secondary">
+				<h3 class="card-title mb-0 text-green font-monospace fs-5">
+					<i class="fas fa-bullhorn me-2 text-green"></i> {{ notification.title }}
+				</h3>
+				<span class="badge" style="background: rgba(0, 210, 255, 0.1); border: 1px solid var(--electric-blue); color: var(--electric-blue); font-family: var(--font-mono); font-size: 0.75rem;">
+					<i class="fas fa-clock me-1"></i> <span data-time="{{ notification.date | isoformat }}"></span>
+				</span>
+			</div>
+			<div class="pt-2">
+				<p class="mb-0 text-main" style="line-height: 1.7;">{{ notification.html }}</p>
 			</div>
 		</div>
 		{% endfor %}
@@ -31,4 +47,3 @@
 {% block scripts %}
   {{ Assets.js("assets/js/notifications.js") }}
 {% endblock %}
-

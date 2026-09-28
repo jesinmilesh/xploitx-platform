@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top">
   <div class="container">
     <a href="{{ url_for('views.static_html', route='/') }}" class="navbar-brand">
       {% if Configs.ctf_logo %}
@@ -6,10 +6,11 @@
             class="img-responsive ctf_logo"
             src="{{ url_for('views.files', path=Configs.ctf_logo) }}"
             alt="{{ Configs.ctf_name }}"
-            height="25"
+            height="32"
         >
       {% else %}
-        {{ Configs.ctf_name }}
+        <i class="fas fa-shield-halved text-green"></i>
+        <span>{{ Configs.ctf_name }}</span>
       {% endif %}
     </a>
 
@@ -207,5 +208,14 @@
         </li>
       </ul>
     </div>
-  </div>
 </nav>
+<div class="cyber-dept-bar">
+  <div class="container cyber-dept-bar-inner">
+    <span class="cyber-accent-line"></span>
+    <div class="cyber-dept-badge">
+      <i class="fas fa-shield-alt"></i>
+      <span>DEPARTMENT OF CYBER SECURITY // TACTICAL NETWORK</span>
+    </div>
+    <span class="cyber-accent-line right"></span>
+  </div>
+</div>

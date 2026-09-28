@@ -3,250 +3,282 @@
 {% block content %}
   <div class="jumbotron">
     <div class="container">
+      <div class="section-tag mb-2">
+        <span class="pulse-dot"></span> [ STRIKE TEAM DOSSIER // DECLASSIFIED ]
+      </div>
       <h1 id="team-id" data-ctfd-team-id="{{ team.id }}">{{ team.name }}</h1>
 
-      {% if team.oauth_id %}
-        <a href="https://majorleaguecyber.org/t/{{ team.name }}">
-          <h3 class="d-inline-block mx-1"><span class="badge bg-primary rounded-pill">{% trans %}Official{% endtrans %}</span></h3>
-        </a>
-      {% endif %}
+      <div class="d-flex flex-wrap justify-content-center align-items-center gap-2 mt-2">
+        {% if team.oauth_id %}
+          <a href="https://majorleaguecyber.org/t/{{ team.name }}" target="_blank">
+            <span class="badge bg-primary font-monospace">{% trans %}Official{% endtrans %}</span>
+          </a>
+        {% endif %}
 
-      {% if team.affiliation %}
-        <h3 class="d-inline-block mx-1">
-          <span class="badge bg-primary rounded-pill">{{ team.affiliation }}</span>
-        </h3>
-      {% endif %}
+        {% if team.affiliation %}
+          <span class="badge" style="background: rgba(0, 210, 255, 0.15); border: 1px solid var(--electric-blue); color: #ffffff; font-family: var(--font-mono);">
+            <i class="fas fa-building me-1 text-cyan"></i> {{ team.affiliation }}
+          </span>
+        {% endif %}
 
-      {% if team.country %}
-        <h3 class="d-inline-block mx-1">
-          <span class="badge bg-primary rounded-pill">
-            <i class="flag-{{ team.country.lower() }}"></i>
+        {% if team.country %}
+          <span class="badge" style="background: rgba(157, 78, 221, 0.15); border: 1px solid var(--incursion-purple); color: #ffffff; font-family: var(--font-mono);">
+            <i class="flag-{{ team.country.lower() }} me-1"></i>
             {{ lookup_country_code(team.country) }}
           </span>
-        </h3>
-      {% endif %}
+        {% endif %}
 
-      {% if team.bracket_id %}
-        <div class="pt-2">
-          <h2>
-            <span class="badge text-bg-light">
-              {{ team.bracket.name }}
-            </span>
-          </h2>
-        </div>
-      {% endif %}
+        {% if team.bracket_id %}
+          <span class="badge bg-secondary font-monospace">
+            {{ team.bracket.name }}
+          </span>
+        {% endif %}
+      </div>
 
       <div class="pt-2">
         {% for field in team.fields %}
-          <h3 class="d-block">
+          <h4 class="d-block font-monospace text-muted small">
             {{ field.name }}: {{ field.value }}
-          </h3>
+          </h4>
         {% endfor %}
       </div>
 
       <div class="pt-2">
         {% if team.website and (team.website.startswith('http://') or team.website.startswith('https://')) %}
-          <a href="{{ team.website }}" target="_blank" style="color: inherit;" rel="noopener">
+          <a href="{{ team.website }}" target="_blank" class="text-green" rel="noopener">
             <i
-                class="fas fa-external-link-alt fa-2x px-2" data-toggle="tooltip" data-placement="top"
+                class="fas fa-external-link-alt fa-lg px-2" data-toggle="tooltip" data-placement="top"
                 title="{{ team.website }}"
             ></i>
           </a>
         {% endif %}
       </div>
 
-      {% if team.fields or team.website %}
-        <hr class="w-50 mx-auto">
-      {% endif %}
+      <div class="d-flex justify-content-center align-items-center gap-4 mt-3">
+        <div class="hud-panel py-2 px-4 text-center" style="min-width: 140px;">
+          <small class="text-muted font-monospace d-block">RANK</small>
+          <h2 id="team-place" class="text-center mb-0 text-gold font-monospace">
+            {% if scores_visible() %}
+              {% if place %}
+                #{{ place }}
+              {% else %}
+                --
+              {% endif %}
+            {% else %}
+              --
+            {% endif %}
+          </h2>
+        </div>
 
-      <h2 id="team-place" class="text-center">
-        {# This intentionally hides the team's place when scores are hidden because this can be
-          their internal profile and we don't want to leak their place in the CTF. #}
-
-        {# Public page hiding is done at the route level #}
-        {% if scores_visible() %}
-          {% if place %}
-            {{ place }}
-            <small>place</small>
-          {% endif %}
-        {% endif %}
-      </h2>
-
-      <h2 id="team-score" class="text-center">
-        {% if score %}
-          {{ score }}
-          <small>points</small>
-        {% endif %}
-      </h2>
+        <div class="hud-panel py-2 px-4 text-center" style="min-width: 140px;">
+          <small class="text-muted font-monospace d-block">TOTAL SCORE</small>
+          <h2 id="team-score" class="text-center mb-0 text-green font-monospace">
+            {% if score %}
+              {{ score }}
+            {% else %}
+              0
+            {% endif %}
+          </h2>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="container">
     {% include "components/errors.html" %}
 
-    <br>
-
-    <div class="row">
+    <div class="row mb-4">
       <div class="col-md-12">
-        <h3>{% trans %}Members{% endtrans %}</h3>
-        <table class="table table-striped align-middle">
-          <thead>
-          <tr>
-            <th>{% trans %}User Name{% endtrans %}</th>
-            <th>{% trans %}Score{% endtrans %}</th>
-          </tr>
-          </thead>
-          <tbody>
-          {% for member in team.members %}
-            <tr>
-              <td>
-                <a href="{{ url_for('users.public', user_id=member.id) }}">
-                  {{ member.name }}
-                </a>
-                {% if member.bracket_id %}
-                  <span class="badge bg-secondary ms-2">{{ member.bracket.name }}</span>
-                {% endif %}
-                {% if team.captain_id == member.id %}
-                  <span class="badge bg-primary ms-2">{% trans %}Captain{% endtrans %}</span>
-                {% endif %}
-              </td>
-              <td>{{ member.score }}</td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
+        <div class="hud-panel p-0 overflow-hidden">
+          <div class="p-3 border-bottom border-secondary">
+            <h4 class="mb-0 text-green font-monospace small">
+              <i class="fas fa-users me-2"></i> [ TEAM OPERATIVES ]
+            </h4>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped align-middle mb-0">
+              <thead>
+              <tr>
+                <th class="ps-4">{% trans %}User Name{% endtrans %}</th>
+                <th class="text-end pe-4">{% trans %}Score{% endtrans %}</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for member in team.members %}
+                <tr>
+                  <td class="ps-4">
+                    <a href="{{ url_for('users.public', user_id=member.id) }}" class="fw-bold">
+                      {{ member.name }}
+                    </a>
+                    {% if member.bracket_id %}
+                      <span class="badge bg-secondary ms-2 font-monospace">{{ member.bracket.name }}</span>
+                    {% endif %}
+                    {% if team.captain_id == member.id %}
+                      <span class="badge bg-primary ms-2 font-monospace">
+                        <i class="fas fa-crown me-1 text-gold"></i> {% trans %}Captain{% endtrans %}
+                      </span>
+                    {% endif %}
+                  </td>
+                  <td class="text-end pe-4 font-monospace">
+                    <span class="badge" style="background: rgba(0, 255, 102, 0.1); border: 1px solid var(--doom-green); color: var(--doom-green);">
+                      {{ member.score }} PTS
+                    </span>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
 
     {% if solves or awards %}
       {% if awards %}
-        <div class="row">
+        <div class="row mb-4">
           <div class="col-md-12">
-            <h3>{% trans %}Awards{% endtrans %}</h3>
-          </div>
-
-          {% for award in awards %}
-            <div class="col-md-3 col-sm-6">
-              <p class="text-center">
-                <i class="award-icon award-{{ award.icon }} fa-2x"></i> <br>
-                <strong>{{ award.name }}</strong>
-              </p>
-
-              {% if award.category %}
-                <p class="text-center">{{ award.category }}</p>
-              {% endif %}
-
-              {% if award.description %}
-                <p class="text-center">{{ award.description }}</p>
-              {% endif %}
-
-              <p class="text-center">{{ award.value }}</p>
+            <div class="hud-panel">
+              <h4 class="text-gold font-monospace small mb-3">
+                <i class="fas fa-trophy me-2"></i> [ HONORS & AWARDS ]
+              </h4>
+              <div class="row g-3">
+                {% for award in awards %}
+                  <div class="col-md-3 col-sm-6 text-center">
+                    <div class="p-3 border border-secondary rounded">
+                      <i class="award-icon award-{{ award.icon }} fa-2x text-gold mb-2"></i>
+                      <strong class="d-block font-monospace">{{ award.name }}</strong>
+                      {% if award.category %}
+                        <p class="text-muted small mb-1">{{ award.category }}</p>
+                      {% endif %}
+                      {% if award.description %}
+                        <p class="text-muted small mb-1">{{ award.description }}</p>
+                      {% endif %}
+                      <span class="badge bg-secondary font-monospace">{{ award.value }} PTS</span>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
             </div>
-          {% endfor %}
+          </div>
         </div>
-
-        <br>
       {% endif %}
 
-      <div class="row">
+      <div class="row mb-4">
         <div class="col-md-12">
-          <h3>{% trans %}Solves{% endtrans %}</h3>
-          <table class="table table-striped align-middle">
-            <thead>
-            <tr>
-              <th class="text-center">{% trans %}Challenge{% endtrans %}</th>
-              <th class="d-none d-md-block d-lg-block">{% trans %}Category{% endtrans %}</th>
-              <th>{% trans %}Value{% endtrans %}</th>
-              <th>{% trans %}Time{% endtrans %}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for solve in solves %}
-              <tr>
-                <td class="text-center">
-                  <a href="{{ url_for('challenges.listing') }}#{{ solve.challenge.name }}-{{ solve.challenge.id }}">
-                    {{ solve.challenge.name }}
-                  </a>
-                </td>
-                <td class="d-none d-md-block d-lg-block">{{ solve.challenge.category }}</td>
-                <td>{{ solve.challenge.value }}</td>
-                <td class="solve-time">
-                  <span data-time="{{ solve.date | isoformat }}"></span>
-                </td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
+          <div class="hud-panel p-0 overflow-hidden">
+            <div class="p-3 border-bottom border-secondary">
+              <h4 class="mb-0 text-green font-monospace small">
+                <i class="fas fa-flag-checkered me-2"></i> [ TARGETS COMPROMISED // SOLVES ]
+              </h4>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-striped align-middle mb-0">
+                <thead>
+                <tr>
+                  <th class="text-start ps-4">{% trans %}Challenge{% endtrans %}</th>
+                  <th class="d-none d-md-table-cell">{% trans %}Category{% endtrans %}</th>
+                  <th>{% trans %}Value{% endtrans %}</th>
+                  <th class="text-end pe-4">{% trans %}Time{% endtrans %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for solve in solves %}
+                  <tr>
+                    <td class="ps-4">
+                      <a href="{{ url_for('challenges.listing') }}#{{ solve.challenge.name }}-{{ solve.challenge.id }}" class="fw-bold">
+                        {{ solve.challenge.name }}
+                      </a>
+                    </td>
+                    <td class="d-none d-md-table-cell font-monospace text-muted">{{ solve.challenge.category }}</td>
+                    <td>
+                      <span class="badge" style="background: rgba(255, 215, 0, 0.1); border: 1px solid var(--doom-gold); color: var(--doom-gold); font-family: var(--font-mono);">
+                        {{ solve.challenge.value }} PTS
+                      </span>
+                    </td>
+                    <td class="solve-time text-end pe-4 font-monospace small text-muted">
+                      <span data-time="{{ solve.date | isoformat }}"></span>
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="clearfix"></div>
-
       <div class="row" x-data="TeamGraphs">
-        <div class="col-md-6 d-none d-md-block d-lg-block py-4">
-          <div class="progress">
-            <div
-              class="progress-bar"
-              role="progressbar"
-              :style="{ width: `${getSolvePercentage()}%`, 'background-color': 'rgb(0, 209, 64)' }"
-            >
-            </div>
-            <div
-              class="progress-bar"
-              role="progressbar"
-              :style="{ width: `${getFailPercentage()}%`, 'background-color': 'rgb(207, 38, 0)' }"
-            >
-            </div>
-          </div>
-          <div class="ps-2 float-start">
-            <svg height="16" width="16">
-              <circle cx="8" cy="8" r="5" fill="rgb(0, 209, 64)" />
-            </svg>
-            <small x-text="`Solves (${getSolvePercentage()}%)`"></small>
-          </div>
-          <div class="ps-2 float-start">
-            <svg height="16" width="16">
-              <circle cx="8" cy="8" r="5" fill="rgb(207, 38, 0)" />
-            </svg>
-            <small x-text="`Fails (${getFailPercentage()}%)`"></small>
-          </div>
-        </div>
-        <div class="col-md-6 d-none d-md-block d-lg-block py-4">
-          <div class="progress">
-            <template x-for="category in getCategoryBreakdown()" :key="category.name">
+        <div class="col-md-6 d-none d-md-block d-lg-block mb-4">
+          <div class="hud-panel p-3">
+            <h5 class="text-muted font-monospace small mb-2">ACCURACY RATIO</h5>
+            <div class="progress mb-2" style="height: 10px; background: rgba(255, 255, 255, 0.05);">
               <div
                 class="progress-bar"
                 role="progressbar"
-                :style="{ width: `${category.percent}%`, 'background-color': category.color }"
+                :style="{ width: `${getSolvePercentage()}%`, 'background-color': 'var(--doom-green)' }"
               >
               </div>
-            </template>
-          </div>
-          <template x-for="category in getCategoryBreakdown()" :key="category.name">
-            <div class="ps-2 float-start">
-              <svg height="16" width="16">
-                <circle cx="8" cy="8" r="5" :fill="category.color" />
-              </svg>
-              <small x-text="`${category.name} (${category.percent}%)`"></small>
+              <div
+                class="progress-bar"
+                role="progressbar"
+                :style="{ width: `${getFailPercentage()}%`, 'background-color': 'var(--cyber-red)' }"
+              >
+              </div>
             </div>
-          </template>
+            <div class="d-flex justify-content-between font-monospace small">
+              <span class="text-green" x-text="`Solves (${getSolvePercentage()}%)`"></span>
+              <span class="text-danger" x-text="`Fails (${getFailPercentage()}%)`"></span>
+            </div>
+          </div>
         </div>
 
-        <br class="clearfix">
+        <div class="col-md-6 d-none d-md-block d-lg-block mb-4">
+          <div class="hud-panel p-3">
+            <h5 class="text-muted font-monospace small mb-2">CATEGORY DOMAINS</h5>
+            <div class="progress mb-2" style="height: 10px; background: rgba(255, 255, 255, 0.05);">
+              <template x-for="category in getCategoryBreakdown()" :key="category.name">
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  :style="{ width: `${category.percent}%`, 'background-color': category.color }"
+                >
+                </div>
+              </template>
+            </div>
+            <div class="d-flex flex-wrap gap-2 font-monospace small">
+              <template x-for="category in getCategoryBreakdown()" :key="category.name">
+                <span :style="{ color: category.color }" x-text="`${category.name} (${category.percent}%)`"></span>
+              </template>
+            </div>
+          </div>
+        </div>
 
         <div class="col-md-12 d-none d-md-block d-lg-block">
-          <div id="score-graph" x-ref="scoregraph" class="w-100 d-flex align-items-center">
-            <div class="text-center w-100">
-              <i class="fas fa-circle-notch fa-spin fa-3x fa-fw spinner"></i>
+          <div class="hud-panel p-3">
+            <h5 class="text-green font-monospace small mb-3">
+              <i class="fas fa-chart-line me-1"></i> [ SCORE TELEMETRY GRAPH ]
+            </h5>
+            <div id="score-graph" x-ref="scoregraph" class="w-100 d-flex align-items-center">
+              <div class="text-center w-100 py-5">
+                <i class="fas fa-circle-notch fa-spin fa-3x fa-fw text-green"></i>
+              </div>
             </div>
           </div>
         </div>
       </div>
     {% else %}
       <div class="row min-vh-25">
-        <h3 class="opacity-50 text-center w-100 justify-content-center align-self-center">
-          {% trans %}No solves yet{% endtrans %}
-        </h3>
+        <div class="col-md-12">
+          <div class="hud-panel text-center py-5">
+            <i class="fas fa-satellite-dish fa-3x text-muted mb-3"></i>
+            <h3 class="text-center text-muted font-monospace">
+              [ {% trans %}No solves yet{% endtrans %} ]
+            </h3>
+            <p class="text-muted small">
+              This unit has not registered any successful exploits yet.
+            </p>
+          </div>
+        </div>
       </div>
     {% endif %}
   </div>

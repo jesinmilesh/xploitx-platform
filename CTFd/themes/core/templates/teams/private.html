@@ -250,54 +250,46 @@
         </h3>
       {% endfor %}
 
-      <h2 id="team-place" class="text-center">
-        {# This intentionally hides the team's place when scores are hidden because this can be their internal profile
-           and we don't want to leak their place in the CTF. #}
-        {# Public page hiding is done at the route level #}
-        {% if scores_visible() %}
-          {% if place %}
-            {{ place }}
-            <small>{% trans %}place{% endtrans %}</small>
-          {% endif %}
-        {% endif %}
-      </h2>
+      <div class="d-flex justify-content-center align-items-center gap-4 mt-3">
+        <div class="hud-panel py-2 px-4 text-center" style="min-width: 140px;">
+          <small class="text-muted font-monospace d-block">RANK</small>
+          <h2 id="team-place" class="text-center mb-0 text-gold font-monospace">
+            {% if scores_visible() %}
+              {% if place %}
+                {{ place }} <small class="text-muted fs-6">place</small>
+              {% else %}
+                --
+              {% endif %}
+            {% else %}
+              --
+            {% endif %}
+          </h2>
+        </div>
 
-      <h2 id="team-score" class="text-center">
-        {% if score %}
-          {{ score }}
-          <small>{% trans %}points{% endtrans %}</small>
-        {% endif %}
-      </h2>
+        <div class="hud-panel py-2 px-4 text-center" style="min-width: 140px;">
+          <small class="text-muted font-monospace d-block">TOTAL SCORE</small>
+          <h2 id="team-score" class="text-center mb-0 text-green font-monospace">
+            {% if score %}
+              {{ score }} <small class="text-muted fs-6">pts</small>
+            {% else %}
+              0 <small class="text-muted fs-6">pts</small>
+            {% endif %}
+          </h2>
+        </div>
+      </div>
 
-      <div x-data="CaptainMenu">
-        <a class="edit-team text-white" @click="editTeam()">
-          <i
-              class="cursor-pointer fas fa-cogs fa-2x px-2 pt-3"
-              data-bs-toggle="tooltip" data-bs-placement="top"
-              title="Edit Team"
-          ></i>
+      <div x-data="CaptainMenu" class="d-flex justify-content-center align-items-center gap-3 mt-3">
+        <a class="edit-team btn btn-sm btn-outline-secondary" @click="editTeam()">
+          <i class="fas fa-cogs me-1 text-green"></i> [ EDIT SQUAD ]
         </a>
-        <a class="edit-captain text-white" @click="chooseCaptain()">
-          <i
-              class="cursor-pointer fas fa-user-tag fa-2x px-2 pt-3"
-              data-bs-toggle="tooltip" data-bs-placement="top"
-              title="Choose Captain"
-          ></i>
+        <a class="edit-captain btn btn-sm btn-outline-secondary" @click="chooseCaptain()">
+          <i class="fas fa-user-tag me-1 text-cyan"></i> [ TRANSFER CAPTAIN ]
         </a>
-
-        <a class="invite-members text-white" @click="inviteMembers()">
-          <i
-              class="cursor-pointer fas fa-ticket-alt fa-2x px-2 pt-3"
-              data-bs-toggle="tooltip" data-bs-placement="top"
-              title="Invite Users"
-          ></i>
+        <a class="invite-members btn btn-sm btn-outline-secondary" @click="inviteMembers()">
+          <i class="fas fa-ticket-alt me-1 text-gold"></i> [ INVITE CODE ]
         </a>
-        <a class="disband-team text-white" @click="disbandTeam()">
-          <i
-              class="cursor-pointer fas fa-trash-alt fa-2x px-2 pt-3"
-              data-bs-toggle="tooltip" data-bs-placement="top"
-              title="Disband Team"
-          ></i>
+        <a class="disband-team btn btn-sm btn-outline-danger" @click="disbandTeam()">
+          <i class="fas fa-trash-alt me-1"></i> [ DISBAND ]
         </a>
       </div>
 
@@ -494,7 +486,7 @@
         'account_id': 'me',
       } | tojson }};
 
-      window.team_captain = {{ (user.id == team.captain_id) | tojson }};
+      window.team_captain = {{ ((user.id == team.captain_id) if user else false) | tojson }};
   </script>
   {{ Assets.js("assets/js/teams/private.js") }}
 {% endblock %}

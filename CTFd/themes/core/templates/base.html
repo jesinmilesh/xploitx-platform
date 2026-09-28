@@ -1,15 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>{{ title or Configs.ctf_name }}</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="{{ Configs.ctf_small_icon }}" type="image/x-icon">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
   {{ meta | safe }}
 
   {% block stylesheets %}
     {{ Assets.css("assets/scss/main.scss") }}
+    <link rel="stylesheet" href="{{ url_for('views.themes_beta', theme='core', path='css/xploitx.css') }}">
   {% endblock %}
 
   {{ Plugins.styles }}
@@ -21,15 +26,15 @@
           'urlRoot': "{{ request.script_root }}",
           'csrfNonce': "{{ Session.nonce }}",
           'userMode': "{{ Configs.user_mode }}",
-          'userId': {{ Session.id }},
-          'userName': {{ User.name | tojson }},
-          'userEmail': {{ User.email | tojson }},
-          'userVerified': {{ User.verified | tojson }},
-          'teamId': {{ Team.id | tojson }},
-          'teamName': {{ Team.name | tojson }},
-          'start': {{ Configs.start | tojson }},
-          'end': {{ Configs.end | tojson }},
-          'themeSettings': {{ Configs.theme_settings | tojson }},
+          'userId': "{{ Session.id | tojson }}",
+          'userName': "{{ User.name | tojson }}",
+          'userEmail': "{{ User.email | tojson }}",
+          'userVerified': "{{ User.verified | tojson }}",
+          'teamId': "{{ Team.id | tojson }}",
+          'teamName': "{{ Team.name | tojson }}",
+          'start': "{{ Configs.start | tojson }}",
+          'end': "{{ Configs.end | tojson }}",
+          'themeSettings': "{{ Configs.theme_settings | tojson }}",
           'eventSounds': [
             "/themes/core/static/sounds/notification.webm",
             "/themes/core/static/sounds/notification.mp3",
@@ -40,6 +45,9 @@
   {{ Configs.theme_header }}
 </head>
 <body>
+<canvas id="particles-bg"></canvas>
+<div class="cyber-grid-overlay"></div>
+
 {% include "components/navbar.html" %}
 
 <main role="main">
@@ -51,11 +59,28 @@
 
 <footer class="footer">
   <div class="container text-center">
-    <a href="https://ctfd.io" class="text-secondary">
-      <small class="text-muted">
-        {% trans %}Powered by CTFd{% endtrans %}
-      </small>
-    </a>
+    <div class="d-flex flex-wrap justify-content-between align-items-center py-2">
+      <div class="text-start mb-2 mb-md-0">
+        <span class="text-green fw-bold font-monospace" style="letter-spacing: 2px;">
+          <i class="fas fa-shield-alt me-1"></i> {{ Configs.ctf_name }}
+        </span>
+        <div class="text-muted small">
+          ENTER THE DIGITAL BATTLEFIELD
+        </div>
+      </div>
+      <div class="text-center text-md-end">
+        <div class="mb-1">
+          <span class="badge" style="background: rgba(0, 255, 102, 0.1); border: 1px solid var(--doom-green); color: var(--doom-green);">
+            <span class="pulse-dot me-1"></span> DEFENSE MATRIX ACTIVE
+          </span>
+        </div>
+        <a href="https://ctfd.io" class="text-secondary" target="_blank" rel="noopener">
+          <small class="text-muted font-monospace">
+            {% trans %}Powered by CTFd{% endtrans %}
+          </small>
+        </a>
+      </div>
+    </div>
   </div>
 </footer>
 
@@ -64,6 +89,8 @@
 {% block scripts %}
   {{ Assets.js("assets/js/page.js") }}
 {% endblock %}
+
+<script src="{{ url_for('views.themes_beta', theme='core', path='js/xploitx.js') }}"></script>
 
 {{ Plugins.scripts }}
 

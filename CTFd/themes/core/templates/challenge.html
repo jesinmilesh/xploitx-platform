@@ -88,7 +88,10 @@
             <span class="challenge-desc">{% block description %}{{ challenge.html }}{% endblock %}</span>
 
             {% if challenge.connection_info %}
-              <div class="mb-2">
+              <div class="mb-3">
+                <div class="text-green font-monospace small mb-1">
+                  <i class="fas fa-terminal me-1"></i> [ TARGET CONNECTION PARAMETERS ]
+                </div>
                 <span class="challenge-connection-info">
                   {% block connection_info %}
                     {% set conn = challenge.connection_info %}

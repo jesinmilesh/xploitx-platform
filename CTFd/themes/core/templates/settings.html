@@ -4,6 +4,9 @@
 {% block content %}
   <div class="jumbotron">
     <div class="container">
+      <div class="section-tag mb-2">
+        <span class="pulse-dot"></span> [ OPERATIVE CONFIGURATION // SECURITY CONTROLS ]
+      </div>
       <h1>
         {% trans %}Settings{% endtrans %}
       </h1>
@@ -13,24 +16,27 @@
   <div class="container">
     <div class="row">
 
-      <div class="col-md-3 offset-md-1 mb-3 mb-md-0">
-        <div class="nav flex-column nav-pills" role="tablist">
-          <button
-              class="nav-link active" id="settings-profile-tab" data-bs-toggle="pill"
-              data-bs-target="#profile" role="tab"
-          >{% trans %}Profile{% endtrans %}
-          </button>
-          <button
-              class="nav-link" id="settings-tokens-tab" data-bs-toggle="pill" data-bs-target="#tokens"
-              role="tab"
-          >{% trans %}Access Tokens{% endtrans %}
-          </button>
+      <div class="col-md-3 mb-3 mb-md-0">
+        <div class="hud-panel p-2">
+          <div class="nav flex-column nav-pills" role="tablist">
+            <button
+                class="nav-link active mb-1" id="settings-profile-tab" data-bs-toggle="pill"
+                data-bs-target="#profile" role="tab"
+            ><i class="fas fa-user-cog me-2 text-green"></i> {% trans %}Profile{% endtrans %}
+            </button>
+            <button
+                class="nav-link" id="settings-tokens-tab" data-bs-toggle="pill" data-bs-target="#tokens"
+                role="tab"
+            ><i class="fas fa-key me-2 text-cyan"></i> {% trans %}Access Tokens{% endtrans %}
+            </button>
+          </div>
         </div>
       </div>
 
-      <div class="col-md-8">
+      <div class="col-md-9">
         <div class="tab-content" id="v-pills-tabContent">
           <div class="tab-pane fade show active" id="profile" role="tabpanel">
+            <div class="hud-panel">
             {% include "components/errors.html" %}
 
             {% with form = Forms.self.SettingsForm(language=language, country=country) %}
@@ -116,10 +122,11 @@
                 </div>
               </form>
             {% endwith %}
+            </div>
           </div>
 
           <div class="tab-pane fade" id="tokens" role="tabpanel">
-
+            <div class="hud-panel">
             {% with form = Forms.self.TokensForm() %}
               <form method="POST" x-data="TokensForm" @submit.prevent="generateToken()" class="mb-3">
                 <div class="modal fade" tabindex="-1" x-ref="tokenModal">
@@ -253,7 +260,7 @@
                 </table>
               </div>
             {% endif %}
-
+            </div>
           </div>
         </div>
       </div>

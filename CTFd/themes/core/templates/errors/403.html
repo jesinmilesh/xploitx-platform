@@ -1,18 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<div class="container">
+<div class="container my-5">
 	<div class="row">
-		<div class="col-md-12">
-			<div class="pt-5 mt-5 text-center">
-				<h1>{{ error }}</h1>
-				<hr class="w-50 m-auto">
-				<br/>
-				<h2>{% trans %}403 Forbidden{% endtrans %}</h2>
+		<div class="col-md-8 offset-md-2">
+			<div class="hud-panel text-center py-5">
+				<div class="section-tag mb-3">
+					<i class="fas fa-hand-paper text-danger"></i> [ ACCESS DENIED // CLEARANCE INSUFFICIENT ]
+				</div>
+				<h1 class="text-danger mb-2">{{ error }}</h1>
+				<p class="font-monospace text-muted mb-4">
+					Security perimeter violation: Your current operative clearance does not grant access to this sector.
+				</p>
+				<a href="{{ url_for('views.static_html', route='/') }}" class="btn btn-primary">
+					<i class="fas fa-home me-1"></i> [ RETURN TO BASE ]
+				</a>
 			</div>
 		</div>
 	</div>
 </div>
-
 {% endblock %}
