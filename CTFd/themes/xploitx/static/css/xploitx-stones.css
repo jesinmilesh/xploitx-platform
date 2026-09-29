@@ -1,0 +1,218 @@
+/* ==========================================================================
+   XploitxCTF 3D Infinity Stones Track Selector Styles
+   ========================================================================== */
+
+.xploitx-stones-wrapper {
+    position: relative;
+    background: linear-gradient(180deg, rgba(8, 14, 28, 0.92) 0%, rgba(4, 7, 16, 0.96) 100%) !important;
+    border: 1px solid rgba(0, 255, 102, 0.35) !important;
+    border-radius: 8px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 255, 102, 0.12) !important;
+    padding: 1.5rem 1.25rem 1.25rem;
+    margin-bottom: 3rem;
+    overflow: hidden;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.xploitx-stones-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        #0088ff 20%, 
+        #00ff66 40%, 
+        #ffaa00 60%, 
+        #9d4edd 80%, 
+        #ff007f 90%, 
+        transparent 100%);
+    box-shadow: 0 0 15px rgba(0, 255, 102, 0.8);
+}
+
+.xploitx-stones-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(0, 255, 102, 0.15);
+}
+
+.xploitx-stones-title {
+    font-family: var(--font-heading) !important;
+    font-size: clamp(0.95rem, 1.4vw, 1.25rem) !important;
+    font-weight: 800 !important;
+    letter-spacing: 2px !important;
+    color: #ffffff;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.xploitx-stones-title i {
+    color: var(--doom-green);
+    text-shadow: 0 0 10px var(--doom-green-glow);
+}
+
+.xploitx-stones-badge {
+    font-family: var(--font-tech), var(--font-mono) !important;
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+    background: rgba(0, 255, 102, 0.12);
+    border: 1px solid var(--doom-green);
+    border-radius: 4px;
+    color: var(--doom-green);
+    text-shadow: 0 0 8px var(--doom-green-glow);
+    text-transform: uppercase;
+}
+
+#xploitx-stones-canvas-container {
+    width: 100%;
+    height: 330px;
+    position: relative;
+    cursor: default;
+    background: radial-gradient(ellipse at center, rgba(12, 22, 44, 0.6) 0%, rgba(4, 7, 16, 0.9) 75%);
+    border-radius: 6px;
+    border: 1px solid rgba(0, 210, 255, 0.15);
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    #xploitx-stones-canvas-container {
+        height: 280px;
+    }
+}
+
+.xploitx-stones-hud-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    background: rgba(6, 11, 22, 0.85);
+    border: 1px solid rgba(0, 255, 102, 0.2);
+    border-radius: 4px;
+    margin-top: 10px;
+    min-height: 42px;
+}
+
+#xploitx-stones-hover-label {
+    font-family: var(--font-tech), var(--font-mono) !important;
+    letter-spacing: 1px;
+    font-size: 0.86rem;
+    transition: all 0.2s ease;
+}
+
+.xploitx-stone-nav-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 10px;
+}
+
+.xploitx-stone-btn {
+    font-family: var(--font-title) !important;
+    letter-spacing: 1.2px !important;
+    font-size: 0.78rem !important;
+    padding: 6px 14px !important;
+    border-radius: 4px !important;
+    text-transform: uppercase !important;
+    background: rgba(10, 16, 32, 0.8) !important;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2)) !important;
+    color: var(--text-color, #ffffff) !important;
+    transition: all 0.25s ease !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.xploitx-stone-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 16px var(--glow-color, rgba(0, 255, 102, 0.5));
+    border-color: var(--text-color, #ffffff) !important;
+    color: #ffffff !important;
+}
+
+.xploitx-stone-btn.active {
+    background: var(--bg-active, rgba(0, 255, 102, 0.2)) !important;
+    border-color: var(--text-color, #00ff66) !important;
+    box-shadow: 0 0 20px var(--glow-color, rgba(0, 255, 102, 0.6)) !important;
+    color: #ffffff !important;
+    font-weight: 800;
+}
+
+/* Subtracks Expandable Panel */
+#xploitx-stones-subtracks-bar {
+    display: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    margin-top: 14px;
+    background: rgba(12, 20, 40, 0.9);
+    border: 1px solid rgba(0, 255, 102, 0.35);
+    border-radius: 6px;
+    animation: fadeInSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.subtracks-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 12px;
+}
+
+.subtracks-pills {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.subtrack-pill {
+    font-family: var(--font-tech), var(--font-mono) !important;
+    font-size: 0.76rem !important;
+    letter-spacing: 1px !important;
+    padding: 5px 12px !important;
+    border-radius: 4px !important;
+    text-transform: uppercase !important;
+    background: rgba(15, 25, 48, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #cbd5e1 !important;
+    transition: all 0.2s ease !important;
+}
+
+.subtrack-pill:hover {
+    color: #ffffff !important;
+    border-color: #00e5ff !important;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+}
+
+.subtrack-reset {
+    font-family: var(--font-tech) !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 1px !important;
+    padding: 5px 10px !important;
+}
