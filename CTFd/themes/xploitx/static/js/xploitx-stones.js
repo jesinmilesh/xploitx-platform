@@ -12,9 +12,9 @@
       id: 'osint',
       name: 'OSINT',
       fullName: 'Open Source Intelligence',
-      colorHex: 0x0088ff,
-      colorCss: '#0088ff',
-      glowCss: 'rgba(0, 136, 255, 0.7)',
+      colorHex: 0x0090ff, // Vibrant Blue
+      colorCss: '#0090ff',
+      glowCss: 'rgba(0, 144, 255, 0.85)',
       categories: ['osint', 'recon', 'intel', 'geo', 'social'],
       subTracks: ['Social Recon', 'Geolocation', 'Domain Intel', 'All OSINT'],
       desc: 'Information Gathering & Digital Footprinting'
@@ -23,9 +23,9 @@
       id: 'reverse',
       name: 'REV ENGINEERING',
       fullName: 'Reverse Engineering',
-      colorHex: 0x00ff66,
+      colorHex: 0x00ff66, // Matrix Emerald Green
       colorCss: '#00ff66',
-      glowCss: 'rgba(0, 255, 102, 0.7)',
+      glowCss: 'rgba(0, 255, 102, 0.85)',
       categories: ['rev', 'reverse', 'reversing', 'binary', 'assembly', 'decompile'],
       subTracks: ['Static Analysis', 'Dynamic Debugging', 'Decompilation', 'All Rev'],
       desc: 'Binary Disassembly, Decompilation & Logic Extraction'
@@ -34,9 +34,9 @@
       id: 'forensics',
       name: 'FORENSICS',
       fullName: 'Digital Forensics',
-      colorHex: 0xffaa00,
-      colorCss: '#ffaa00',
-      glowCss: 'rgba(255, 170, 0, 0.7)',
+      colorHex: 0xffea00, // Electric Yellow
+      colorCss: '#ffea00',
+      glowCss: 'rgba(255, 234, 0, 0.9)',
       categories: ['forensics', 'forensic', 'pcap', 'network', 'memory', 'disk', 'wireshark'],
       subTracks: ['PCAP Analysis', 'Memory Dumps', 'Disk Artifacts', 'All Forensics'],
       desc: 'Packet Captures, Memory Imaging & Incident Investigation'
@@ -45,9 +45,9 @@
       id: 'crypto',
       name: 'CRYPTOGRAPHY',
       fullName: 'Cryptography',
-      colorHex: 0x9d4edd,
-      colorCss: '#9d4edd',
-      glowCss: 'rgba(157, 78, 221, 0.7)',
+      colorHex: 0xa855f7, // Royal Purple
+      colorCss: '#a855f7',
+      glowCss: 'rgba(168, 85, 247, 0.9)',
       categories: ['crypto', 'cryptography', 'rsa', 'cipher', 'aes', 'hashes'],
       subTracks: ['Classical Ciphers', 'Modern RSA/ECC', 'Cryptanalysis', 'All Crypto'],
       desc: 'Mathematical Ciphers, Asymmetric Math & Key Attacks'
@@ -56,9 +56,9 @@
       id: 'stego',
       name: 'STEGANOGRAPHY',
       fullName: 'Steganography',
-      colorHex: 0xff007f, // Neon Pink / Hot Magenta
-      colorCss: '#ff007f',
-      glowCss: 'rgba(255, 0, 127, 0.8)',
+      colorHex: 0xff1744, // Fiery Crimson Red
+      colorCss: '#ff1744',
+      glowCss: 'rgba(255, 23, 68, 0.95)',
       categories: ['stego', 'steganography', 'audio', 'image', 'lsb', 'hidden'],
       subTracks: ['LSB & Visual', 'Audio Spectrograms', 'Polyglot Files', 'All Stego'],
       desc: 'Hidden Secrets in Pixels, Audio Waves & Data Containers'
@@ -67,9 +67,9 @@
       id: 'others',
       name: 'OTHERS / MULTI',
       fullName: 'Extended Multi-Tracks',
-      colorHex: 0xff2244, // Crimson Flame
-      colorCss: '#ff2244',
-      glowCss: 'rgba(255, 34, 68, 0.75)',
+      colorHex: 0xff2a85, // Cosmic Vivid Hot Pink
+      colorCss: '#ff2a85',
+      glowCss: 'rgba(255, 42, 133, 0.95)',
       categories: ['web', 'pwn', 'misc', 'hardware', 'jail', 'blockchain', 'cloud'],
       subTracks: ['Web Exploitation', 'Binary / Pwn', 'Miscellaneous', 'Hardware', 'All Others'],
       desc: 'Web Application Hacking, Binary Exploitation & Hardware Labs'
@@ -90,35 +90,70 @@
     container: null,
     animFrameId: null,
 
-    // Generate procedural star-sparkle texture in memory
-    createSparkleTexture() {
+    // Generate high-intensity soft radial halo texture for color-accurate stone aura
+    createGlowTexture() {
       const canvas = document.createElement('canvas');
-      canvas.width = 64;
-      canvas.height = 64;
+      canvas.width = 128;
+      canvas.height = 128;
       const ctx = canvas.getContext('2d');
+      const cx = 64;
+      const cy = 64;
 
-      const cx = 32;
-      const cy = 32;
-
-      // Radial center glow
-      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 30);
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 64);
       grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
-      grad.addColorStop(0.2, 'rgba(255, 255, 255, 0.8)');
-      grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.2)');
+      grad.addColorStop(0.2, 'rgba(255, 255, 255, 0.7)');
+      grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.22)');
+      grad.addColorStop(0.8, 'rgba(255, 255, 255, 0.05)');
       grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 64, 64);
+      ctx.fillRect(0, 0, 128, 128);
 
-      // 4-point glittering star spikes
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+      const texture = new THREE.CanvasTexture(canvas);
+      return texture;
+    },
+
+    // Generate enhanced 8-point glittering starburst sparkle texture in memory
+    createSparkleTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      const cx = 64;
+      const cy = 64;
+
+      // Radial center core glow
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 48);
+      grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+      grad.addColorStop(0.18, 'rgba(255, 255, 255, 0.9)');
+      grad.addColorStop(0.42, 'rgba(255, 255, 255, 0.25)');
+      grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 128, 128);
+
+      // 4 primary sharp glittering star spikes
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.98)';
       ctx.beginPath();
-      ctx.moveTo(cx, 4);
+      ctx.moveTo(cx, 2);
+      ctx.lineTo(cx + 6, cy - 6);
+      ctx.lineTo(126, cy);
+      ctx.lineTo(cx + 6, cy + 6);
+      ctx.lineTo(cx, 126);
+      ctx.lineTo(cx - 6, cy + 6);
+      ctx.lineTo(2, cy);
+      ctx.lineTo(cx - 6, cy - 6);
+      ctx.closePath();
+      ctx.fill();
+
+      // 4 diagonal glittering micro-spikes
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+      ctx.beginPath();
+      ctx.moveTo(cx + 34, cy - 34);
       ctx.lineTo(cx + 4, cy - 4);
-      ctx.lineTo(60, cy);
+      ctx.lineTo(cx + 34, cy + 34);
       ctx.lineTo(cx + 4, cy + 4);
-      ctx.lineTo(cx, 60);
+      ctx.lineTo(cx - 34, cy + 34);
       ctx.lineTo(cx - 4, cy + 4);
-      ctx.lineTo(4, cy);
+      ctx.lineTo(cx - 34, cy - 34);
       ctx.lineTo(cx - 4, cy - 4);
       ctx.closePath();
       ctx.fill();
@@ -197,6 +232,7 @@
 
       // 5. Build the 6 Stones
       const sparkleTex = this.createSparkleTexture();
+      const glowTex = this.createGlowTexture();
       this.stones = [];
 
       const spacing = width < 600 ? 2.5 : 2.75;
@@ -222,44 +258,58 @@
         const mat = new THREE.MeshPhongMaterial({
           color: stoneData.colorHex,
           emissive: stoneData.colorHex,
-          emissiveIntensity: 0.35,
+          emissiveIntensity: 0.50,
           specular: 0xffffff,
-          shininess: 95,
+          shininess: 120,
           flatShading: true,
           transparent: true,
-          opacity: 0.88,
+          opacity: 0.90,
           depthWrite: true
         });
         const mesh = new THREE.Mesh(geom, mat);
         group.add(mesh);
 
         // B. Inner Glowing Core
-        const coreGeom = new THREE.IcosahedronGeometry(0.75, 0);
+        const coreGeom = new THREE.IcosahedronGeometry(0.76, 0);
         const coreMat = new THREE.MeshBasicMaterial({
           color: stoneData.colorHex,
           wireframe: true,
           transparent: true,
-          opacity: 0.45
+          opacity: 0.55
         });
         const coreMesh = new THREE.Mesh(coreGeom, coreMat);
         group.add(coreMesh);
 
-        // C. Internal Point Light
-        const pointLight = new THREE.PointLight(stoneData.colorHex, 2.4, 5.5);
+        // C. Internal Radiant Point Light (exact stone color)
+        const pointLight = new THREE.PointLight(stoneData.colorHex, 3.2, 7.0);
         group.add(pointLight);
 
-        // D. Glistening Sparkle Particle Aura
-        const particleCount = 36;
+        // D. Radial Colored Glowing Aura Halo (Sprite)
+        const auraMat = new THREE.SpriteMaterial({
+          map: glowTex,
+          color: stoneData.colorHex,
+          transparent: true,
+          opacity: 0.55,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        });
+        const auraSprite = new THREE.Sprite(auraMat);
+        auraSprite.scale.set(3.8, 3.8, 1.0);
+        group.add(auraSprite);
+
+        // E. Glistening Sparkle Particle Aura (48 Particles per Stone)
+        const particleCount = 48;
         const particleGeom = new THREE.BufferGeometry();
         const pPositions = new Float32Array(particleCount * 3);
         const pPhases = new Float32Array(particleCount);
         const pRadii = new Float32Array(particleCount);
         const pSpeeds = new Float32Array(particleCount);
+        const pInclinations = new Float32Array(particleCount);
 
         for (let p = 0; p < particleCount; p++) {
           const theta = Math.random() * Math.PI * 2;
           const phi = (Math.random() - 0.5) * Math.PI;
-          const radius = 1.35 + Math.random() * 0.95;
+          const radius = 1.35 + Math.random() * 1.05;
 
           pPositions[p * 3] = radius * Math.cos(phi) * Math.cos(theta);
           pPositions[p * 3 + 1] = radius * Math.sin(phi);
@@ -267,19 +317,20 @@
 
           pPhases[p] = Math.random() * Math.PI * 2;
           pRadii[p] = radius;
-          pSpeeds[p] = 1.2 + Math.random() * 2.4;
+          pSpeeds[p] = 1.4 + Math.random() * 2.8;
+          pInclinations[p] = (Math.random() - 0.5) * 0.8;
         }
 
         particleGeom.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
 
         const particleMat = new THREE.PointsMaterial({
-          size: 0.42,
+          size: 0.48,
           map: sparkleTex,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
           transparent: true,
           color: stoneData.colorHex,
-          opacity: 0.85
+          opacity: 0.92
         });
 
         const particles = new THREE.Points(particleGeom, particleMat);
@@ -291,10 +342,14 @@
           mesh,
           coreMesh,
           pointLight,
+          auraSprite,
+          auraMat,
           particles,
+          particleMat,
           pPhases,
           pRadii,
           pSpeeds,
+          pInclinations,
           data: stoneData
         });
       });
@@ -421,10 +476,30 @@
       if (this.activeStone) {
         const chosen = this.stones.find(s => s.data.id === this.activeStone);
         if (chosen) {
-          chosen.group.userData.targetScale = 1.32;
+          chosen.group.userData.targetScale = 1.35;
           setTimeout(() => {
-            if (chosen) chosen.group.userData.targetScale = 1.15;
+            if (chosen) chosen.group.userData.targetScale = 1.20;
           }, 240);
+        }
+      }
+
+      // Sync companion button active highlights and glow
+      document.querySelectorAll('.xploitx-stone-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.boxShadow = '';
+      });
+      if (this.activeStone) {
+        const matchingBtn = document.querySelector(`.xploitx-stone-btn[onclick*="'${this.activeStone}'"]`);
+        const stoneInfo = STONES_DATA.find(s => s.id === this.activeStone);
+        if (matchingBtn && stoneInfo) {
+          matchingBtn.classList.add('active');
+          matchingBtn.style.boxShadow = `0 0 18px ${stoneInfo.glowCss}`;
+          matchingBtn.style.borderColor = stoneInfo.colorCss;
+        }
+      } else {
+        const allBtn = document.querySelector(`.xploitx-stone-btn[onclick*="null"]`);
+        if (allBtn) {
+          allBtn.classList.add('active');
         }
       }
 
@@ -562,9 +637,9 @@
         // Target scale handling
         let targetScale = 1.0;
         if (isSelected) {
-          targetScale = 1.18;
+          targetScale = 1.20;
         } else if (isHovered) {
-          targetScale = 1.12;
+          targetScale = 1.14;
         }
         stone.group.userData.targetScale = targetScale;
         stone.group.userData.currentScale += (stone.group.userData.targetScale - stone.group.userData.currentScale) * 0.12;
@@ -572,38 +647,49 @@
         stone.group.scale.set(s, s, s);
 
         // Smooth Floating Bobbing Physics
-        const floatY = Math.sin(time * 1.75 + i * 0.9) * 0.22;
+        const floatY = Math.sin(time * 1.8 + i * 0.95) * 0.24;
         stone.group.position.y = floatY;
 
-        // Rotation
-        const speedMult = isHovered ? 2.8 : (isSelected ? 1.8 : 1.0);
+        // Rotation (Crystal & Core in counter-rotation for dynamic faceted glinting)
+        const speedMult = isHovered ? 2.6 : (isSelected ? 1.7 : 1.0);
         stone.mesh.rotation.y += stone.group.userData.rotSpeedY * speedMult;
         stone.mesh.rotation.x += stone.group.userData.rotSpeedX * speedMult;
-        stone.coreMesh.rotation.y -= stone.group.userData.rotSpeedY * speedMult * 1.5;
+        stone.coreMesh.rotation.y -= stone.group.userData.rotSpeedY * speedMult * 1.6;
+        stone.coreMesh.rotation.z += 0.003 * speedMult;
 
-        // Pulsing Point Light & Emissive Glow
-        const pulse = Math.sin(time * 3.0 + i) * 0.45;
-        stone.pointLight.intensity = (isSelected ? 3.5 : (isHovered ? 3.0 : 2.2)) + pulse;
-        stone.mesh.material.emissiveIntensity = (isSelected ? 0.65 : (isHovered ? 0.55 : 0.35)) + pulse * 0.15;
+        // Pulsing Point Light & Emissive Glow in Stone's Exact Color
+        const pulse = Math.sin(time * 3.4 + i * 1.2) * 0.55;
+        stone.pointLight.intensity = (isSelected ? 4.8 : (isHovered ? 4.0 : 2.9)) + pulse;
+        stone.mesh.material.emissiveIntensity = (isSelected ? 0.88 : (isHovered ? 0.72 : 0.48)) + pulse * 0.20;
 
-        // Glistening Sparkle Particles Simulation
+        // Radial Aura Halo Scaling & Breathing Glow Pulse
+        const baseAuraScale = isSelected ? 5.2 : (isHovered ? 4.6 : 3.8);
+        const auraPulse = Math.sin(time * 2.8 + i) * 0.25;
+        const currentAuraScale = baseAuraScale + auraPulse;
+        stone.auraSprite.scale.set(currentAuraScale, currentAuraScale, 1.0);
+        stone.auraMat.opacity = (isSelected ? 0.85 : (isHovered ? 0.72 : 0.48)) + auraPulse * 0.12;
+
+        // Glistening Sparkle Particles Simulation (3D orbits + twinkle)
         const pPos = stone.particles.geometry.attributes.position.array;
         const count = stone.pPhases.length;
 
         for (let p = 0; p < count; p++) {
           const speed = stone.pSpeeds[p];
-          const phase = stone.pPhases[p] + time * speed * (isHovered ? 2.2 : 1.0);
-          const rad = stone.pRadii[p] * (1.0 + Math.sin(phase) * 0.12);
+          const phase = stone.pPhases[p] + time * speed * (isHovered ? 2.0 : 1.0);
+          const rad = stone.pRadii[p] * (1.0 + Math.sin(phase * 1.4) * 0.14);
+          const inc = stone.pInclinations ? stone.pInclinations[p] : 0;
 
-          // Orbit particle around stone
+          // Orbit particle around stone with vertical waves
           pPos[p * 3] = rad * Math.cos(phase);
-          pPos[p * 3 + 1] = rad * Math.sin(phase * 0.8) * 0.9;
+          pPos[p * 3 + 1] = rad * Math.sin(phase * 0.85) * 0.85 + Math.sin(time * 2.0 + p) * 0.15 + inc;
           pPos[p * 3 + 2] = rad * Math.sin(phase);
         }
         stone.particles.geometry.attributes.position.needsUpdate = true;
 
-        // Sparkle material shimmer
-        stone.particles.material.size = (0.35 + Math.sin(time * 4.0 + i * 2) * 0.12) * (isHovered ? 1.4 : 1.0);
+        // Sparkle material shimmer & glisten according to color
+        const shimmer = Math.sin(time * 6.0 + i * 2.2) * 0.15;
+        stone.particleMat.size = (0.48 + shimmer) * (isSelected ? 1.45 : (isHovered ? 1.25 : 1.0));
+        stone.particleMat.opacity = 0.84 + Math.sin(time * 4.2 + i * 1.8) * 0.16;
       });
 
       this.renderer.render(this.scene, this.camera);
