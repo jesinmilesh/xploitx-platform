@@ -90,6 +90,7 @@ CTFd/plugins/*
 !CTFd/plugins/challenges/
 !CTFd/plugins/dynamic_challenges/
 !CTFd/plugins/flags/
+!CTFd/plugins/ctfd-whale/
 !CTFd/plugins/*.py
 
 # non-default themes
