@@ -6,13 +6,16 @@
 (function () {
   'use strict';
 
-  // Track definitions
+  // Track definitions (Order matching exact Infinity Stones sequence in reference photo: Blue -> Yellow -> Red -> Purple -> Green -> Pink)
   const STONES_DATA = [
     {
       id: 'osint',
       name: 'OSINT',
       fullName: 'Open Source Intelligence',
-      colorHex: 0x0090ff, // Vibrant Blue
+      stoneType: 'osint',
+      colorHex: 0x0090ff,          // Electric Sapphire Blue
+      baseColorHex: 0x001d52,      // Deep space crystal body
+      coreColorHex: 0xaae0ff,      // White-hot cyan-blue core
       colorCss: '#0090ff',
       glowCss: 'rgba(0, 144, 255, 0.85)',
       categories: ['osint', 'recon', 'intel', 'geo', 'social'],
@@ -20,21 +23,13 @@
       desc: 'Information Gathering & Digital Footprinting'
     },
     {
-      id: 'reverse',
-      name: 'REV ENGINEERING',
-      fullName: 'Reverse Engineering',
-      colorHex: 0x00ff66, // Matrix Emerald Green
-      colorCss: '#00ff66',
-      glowCss: 'rgba(0, 255, 102, 0.85)',
-      categories: ['rev', 'reverse', 'reversing', 'binary', 'assembly', 'decompile'],
-      subTracks: ['Static Analysis', 'Dynamic Debugging', 'Decompilation', 'All Rev'],
-      desc: 'Binary Disassembly, Decompilation & Logic Extraction'
-    },
-    {
       id: 'forensics',
       name: 'FORENSICS',
       fullName: 'Digital Forensics',
-      colorHex: 0xffea00, // Electric Yellow
+      stoneType: 'forensics',
+      colorHex: 0xffea00,          // Radiant Solar Yellow
+      baseColorHex: 0x5a3f00,      // Deep amber-gold crystal body
+      coreColorHex: 0xfffca8,      // White-hot golden solar core
       colorCss: '#ffea00',
       glowCss: 'rgba(255, 234, 0, 0.9)',
       categories: ['forensics', 'forensic', 'pcap', 'network', 'memory', 'disk', 'wireshark'],
@@ -42,21 +37,13 @@
       desc: 'Packet Captures, Memory Imaging & Incident Investigation'
     },
     {
-      id: 'crypto',
-      name: 'CRYPTOGRAPHY',
-      fullName: 'Cryptography',
-      colorHex: 0xa855f7, // Royal Purple
-      colorCss: '#a855f7',
-      glowCss: 'rgba(168, 85, 247, 0.9)',
-      categories: ['crypto', 'cryptography', 'rsa', 'cipher', 'aes', 'hashes'],
-      subTracks: ['Classical Ciphers', 'Modern RSA/ECC', 'Cryptanalysis', 'All Crypto'],
-      desc: 'Mathematical Ciphers, Asymmetric Math & Key Attacks'
-    },
-    {
       id: 'stego',
       name: 'STEGANOGRAPHY',
       fullName: 'Steganography',
-      colorHex: 0xff1744, // Fiery Crimson Red
+      stoneType: 'stego',
+      colorHex: 0xff1744,          // Fiery Crimson Red
+      baseColorHex: 0x520011,      // Deep ruby crystal body
+      coreColorHex: 0xff99a8,      // White-hot crimson core
       colorCss: '#ff1744',
       glowCss: 'rgba(255, 23, 68, 0.95)',
       categories: ['stego', 'steganography', 'audio', 'image', 'lsb', 'hidden'],
@@ -64,10 +51,41 @@
       desc: 'Hidden Secrets in Pixels, Audio Waves & Data Containers'
     },
     {
+      id: 'crypto',
+      name: 'CRYPTOGRAPHY',
+      fullName: 'Cryptography',
+      stoneType: 'crypto',
+      colorHex: 0xa855f7,          // Mystic Royal Purple
+      baseColorHex: 0x380062,      // Deep amethyst crystal body
+      coreColorHex: 0xebbeff,      // White-hot violet-magenta core
+      colorCss: '#a855f7',
+      glowCss: 'rgba(168, 85, 247, 0.9)',
+      categories: ['crypto', 'cryptography', 'rsa', 'cipher', 'aes', 'hashes'],
+      subTracks: ['Classical Ciphers', 'Modern RSA/ECC', 'Cryptanalysis', 'All Crypto'],
+      desc: 'Mathematical Ciphers, Asymmetric Math & Key Attacks'
+    },
+    {
+      id: 'reverse',
+      name: 'REV ENGINEERING',
+      fullName: 'Reverse Engineering',
+      stoneType: 'reverse',
+      colorHex: 0x00ff66,          // Matrix Emerald Green
+      baseColorHex: 0x003d14,      // Deep emerald crystal body
+      coreColorHex: 0xb8ffd9,      // White-hot cyan-green core
+      colorCss: '#00ff66',
+      glowCss: 'rgba(0, 255, 102, 0.85)',
+      categories: ['rev', 'reverse', 'reversing', 'binary', 'assembly', 'decompile'],
+      subTracks: ['Static Analysis', 'Dynamic Debugging', 'Decompilation', 'All Rev'],
+      desc: 'Binary Disassembly, Decompilation & Logic Extraction'
+    },
+    {
       id: 'others',
       name: 'OTHERS / MULTI',
       fullName: 'Extended Multi-Tracks',
-      colorHex: 0xff2a85, // Cosmic Vivid Hot Pink
+      stoneType: 'others',
+      colorHex: 0xff2a85,          // Cosmic Hot Pink
+      baseColorHex: 0x540026,      // Deep cosmic rose crystal body
+      coreColorHex: 0xffa8cd,      // White-hot pink flare core
       colorCss: '#ff2a85',
       glowCss: 'rgba(255, 42, 133, 0.95)',
       categories: ['web', 'pwn', 'misc', 'hardware', 'jail', 'blockchain', 'cloud'],
@@ -84,13 +102,14 @@
     camera: null,
     renderer: null,
     stones: [],
+    starfield: null,
     raycaster: null,
     mouse: null,
     hoveredIndex: -1,
     container: null,
     animFrameId: null,
 
-    // Generate high-intensity soft radial halo texture for color-accurate stone aura
+    // Soft atmospheric colored nebula halo sprite
     createGlowTexture() {
       const canvas = document.createElement('canvas');
       canvas.width = 128;
@@ -108,11 +127,31 @@
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 128, 128);
 
-      const texture = new THREE.CanvasTexture(canvas);
-      return texture;
+      return new THREE.CanvasTexture(canvas);
     },
 
-    // Generate enhanced 8-point glittering starburst sparkle texture in memory
+    // Burning incandescent white-hot core flare inside the crystal
+    createCoreFlareTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      const cx = 64;
+      const cy = 64;
+
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 64);
+      grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+      grad.addColorStop(0.25, 'rgba(255, 255, 255, 0.95)');
+      grad.addColorStop(0.55, 'rgba(255, 255, 255, 0.55)');
+      grad.addColorStop(0.8, 'rgba(255, 255, 255, 0.15)');
+      grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 128, 128);
+
+      return new THREE.CanvasTexture(canvas);
+    },
+
+    // Enhanced 8-point glittering starburst sparkle texture
     createSparkleTexture() {
       const canvas = document.createElement('canvas');
       canvas.width = 128;
@@ -158,28 +197,94 @@
       ctx.closePath();
       ctx.fill();
 
-      const texture = new THREE.CanvasTexture(canvas);
-      return texture;
+      return new THREE.CanvasTexture(canvas);
     },
 
-    // Procedural raw cosmic crystal geometry with jagged facets
-    createCrystalGeometry(seed) {
-      const geom = new THREE.IcosahedronGeometry(1.25, 0);
+    // Procedural raw cosmic crystal geometry with sculpted silhouettes matching the reference photo
+    createCrystalGeometry(stoneType, seed) {
+      // Dodecahedron with 1 subdivision level = 80 triangular facets for authentic raw geode look
+      const geom = new THREE.DodecahedronGeometry(1.22, 1);
       const pos = geom.attributes.position;
-      // Procedurally perturb vertices to create irregular gemstone facets
+
       for (let i = 0; i < pos.count; i++) {
-        const vx = pos.getX(i);
-        const vy = pos.getY(i);
-        const vz = pos.getZ(i);
+        let vx = pos.getX(i);
+        let vy = pos.getY(i);
+        let vz = pos.getZ(i);
 
-        // Simple pseudo-random hash
-        const hash = Math.sin(vx * 12.9898 + vy * 78.233 + vz * 45.164 + seed) * 43758.5453;
-        const offset = ((hash - Math.floor(hash)) - 0.5) * 0.35;
+        // 1. Unique silhouette shaping per stone type matching the reference photo
+        if (stoneType === 'osint') {
+          // Blue (Space Stone): Diamond / triangular apex shard with wide base
+          if (vy > 0) {
+            vx *= 0.72;
+            vz *= 0.72;
+            vy *= 1.28;
+          } else {
+            vx *= 1.18;
+            vz *= 1.15;
+          }
+        } else if (stoneType === 'forensics') {
+          // Yellow (Mind Stone): Chunky, wide asteroid geode cluster
+          vx *= 1.20;
+          vy *= 0.90;
+          vz *= 1.14;
+        } else if (stoneType === 'stego') {
+          // Red (Reality Stone): Slanted crystal shard with diagonal shear
+          vy *= 1.34;
+          vx += vy * 0.22;
+          vz *= 0.92;
+        } else if (stoneType === 'crypto') {
+          // Purple (Power Stone): Horizontally elongated jagged cluster
+          vx *= 1.35;
+          vy *= 0.88;
+          vz *= 1.05;
+        } else if (stoneType === 'reverse') {
+          // Green (Time Stone): Upright faceted emerald block
+          vy *= 1.25;
+          vx *= 1.04;
+          vz *= 1.08;
+        } else if (stoneType === 'others') {
+          // Pink (Soul Stone variant): Asymmetric beveled rhomboid shard
+          vy *= 1.18;
+          vx *= 1.12;
+          vz += vx * 0.24;
+        }
 
-        pos.setXYZ(i, vx + vx * offset, vy + vy * offset, vz + vz * offset);
+        // 2. Multi-octave pseudo-random displacement for crisp, rugged cosmic geode facets
+        const hash1 = Math.sin(vx * 13.123 + vy * 37.456 + vz * 53.789 + seed) * 43758.5453;
+        const offset1 = ((hash1 - Math.floor(hash1)) - 0.5) * 0.38;
+
+        const hash2 = Math.sin(vx * 29.871 + vy * 61.233 + vz * 19.412 + seed * 2.3) * 23421.631;
+        const offset2 = ((hash2 - Math.floor(hash2)) - 0.5) * 0.18;
+
+        const totalOffset = offset1 + offset2;
+        pos.setXYZ(i, vx + vx * totalOffset, vy + vy * totalOffset, vz + vz * totalOffset);
       }
+
       geom.computeVertexNormals();
       return geom;
+    },
+
+    // Distant twinkling micro-starfield in deep space
+    createDeepSpaceStarfield() {
+      const count = 160;
+      const geom = new THREE.BufferGeometry();
+      const pos = new Float32Array(count * 3);
+      for (let i = 0; i < count; i++) {
+        pos[i * 3] = (Math.random() - 0.5) * 36;
+        pos[i * 3 + 1] = (Math.random() - 0.5) * 16;
+        pos[i * 3 + 2] = -12 - Math.random() * 12;
+      }
+      geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      const mat = new THREE.PointsMaterial({
+        size: 0.16,
+        color: 0xccddff,
+        transparent: true,
+        opacity: 0.65,
+        blending: THREE.AdditiveBlending
+      });
+      const starfield = new THREE.Points(geom, mat);
+      this.scene.add(starfield);
+      this.starfield = starfield;
     },
 
     init() {
@@ -196,9 +301,8 @@
 
       // 2. Camera
       this.camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
-      this.camera.position.set(0, 0.3, 11.5);
+      this.camera.position.set(0, 0.25, 11.5);
 
-      // Adjust camera for mobile screens
       if (width < 600) {
         this.camera.position.z = 17;
       } else if (width < 992) {
@@ -210,29 +314,33 @@
       this.renderer.setSize(width, height);
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      this.renderer.toneMappingExposure = 1.25;
+      this.renderer.toneMappingExposure = 1.35;
       this.container.innerHTML = '';
       this.container.appendChild(this.renderer.domElement);
 
-      // 4. Lights
-      const ambientLight = new THREE.AmbientLight(0x0a1428, 1.2);
+      // 4. Cosmic Starfield & Atmospheric Lighting
+      this.createDeepSpaceStarfield();
+
+      const ambientLight = new THREE.AmbientLight(0x0c152a, 1.1);
       this.scene.add(ambientLight);
 
-      const topKeyLight = new THREE.DirectionalLight(0xffffff, 1.4);
-      topKeyLight.position.set(0, 10, 10);
+      // Strong directional key light for sharp facet reflections / glints
+      const topKeyLight = new THREE.DirectionalLight(0xffffff, 2.0);
+      topKeyLight.position.set(5, 12, 10);
       this.scene.add(topKeyLight);
 
-      const bottomRimLight = new THREE.DirectionalLight(0x00ffaa, 0.8);
-      bottomRimLight.position.set(0, -8, -5);
+      const bottomRimLight = new THREE.DirectionalLight(0x00d4ff, 0.85);
+      bottomRimLight.position.set(-8, -6, -6);
       this.scene.add(bottomRimLight);
 
-      const magentaRimLight = new THREE.DirectionalLight(0xff00aa, 0.6);
-      magentaRimLight.position.set(10, 0, -5);
+      const magentaRimLight = new THREE.DirectionalLight(0xff00aa, 0.7);
+      magentaRimLight.position.set(8, -6, -6);
       this.scene.add(magentaRimLight);
 
       // 5. Build the 6 Stones
       const sparkleTex = this.createSparkleTexture();
       const glowTex = this.createGlowTexture();
+      const coreFlareTex = this.createCoreFlareTexture();
       this.stones = [];
 
       const spacing = width < 600 ? 2.5 : 2.75;
@@ -253,51 +361,67 @@
           rotSpeedY: 0.008 + (idx % 2) * 0.003
         };
 
-        // A. Faceted Gem Mesh
-        const geom = this.createCrystalGeometry(idx * 7.7);
+        // A. Faceted Raw Crystal Mesh with authentic geode facets
+        const geom = this.createCrystalGeometry(stoneData.stoneType, idx * 8.3);
         const mat = new THREE.MeshPhongMaterial({
-          color: stoneData.colorHex,
+          color: stoneData.baseColorHex,
           emissive: stoneData.colorHex,
-          emissiveIntensity: 0.50,
+          emissiveIntensity: 0.44,
           specular: 0xffffff,
-          shininess: 120,
+          shininess: 160,
           flatShading: true,
           transparent: true,
-          opacity: 0.90,
+          opacity: 0.84,
           depthWrite: true
         });
         const mesh = new THREE.Mesh(geom, mat);
         group.add(mesh);
 
-        // B. Inner Glowing Core
-        const coreGeom = new THREE.IcosahedronGeometry(0.76, 0);
+        // B. Incandescent White-Hot Burning Core Flare (shines from inside the rock!)
+        const coreFlareMat = new THREE.SpriteMaterial({
+          map: coreFlareTex,
+          color: stoneData.coreColorHex,
+          blending: THREE.AdditiveBlending,
+          transparent: true,
+          opacity: 0.96,
+          depthWrite: false
+        });
+        const coreFlareSprite = new THREE.Sprite(coreFlareMat);
+        coreFlareSprite.scale.set(1.45, 1.45, 1.0);
+        group.add(coreFlareSprite);
+
+        // C. Inner Glowing Crystalline Wireframe Core
+        const coreGeom = new THREE.IcosahedronGeometry(0.72, 0);
         const coreMat = new THREE.MeshBasicMaterial({
           color: stoneData.colorHex,
           wireframe: true,
           transparent: true,
-          opacity: 0.55
+          opacity: 0.45
         });
         const coreMesh = new THREE.Mesh(coreGeom, coreMat);
         group.add(coreMesh);
 
-        // C. Internal Radiant Point Light (exact stone color)
-        const pointLight = new THREE.PointLight(stoneData.colorHex, 3.2, 7.0);
+        // D. Internal Radiant Point Light & Core Light
+        const pointLight = new THREE.PointLight(stoneData.colorHex, 4.2, 7.5);
         group.add(pointLight);
+        const innerWhiteLight = new THREE.PointLight(0xffffff, 2.0, 3.5);
+        group.add(innerWhiteLight);
 
-        // D. Radial Colored Glowing Aura Halo (Sprite)
+        // E. Outer Atmospheric Nebula Halo (Glow Sprite)
         const auraMat = new THREE.SpriteMaterial({
           map: glowTex,
           color: stoneData.colorHex,
           transparent: true,
-          opacity: 0.55,
+          opacity: 0.52,
           blending: THREE.AdditiveBlending,
           depthWrite: false
         });
         const auraSprite = new THREE.Sprite(auraMat);
-        auraSprite.scale.set(3.8, 3.8, 1.0);
+        auraSprite.position.z = -0.35;
+        auraSprite.scale.set(4.8, 4.8, 1.0);
         group.add(auraSprite);
 
-        // E. Glistening Sparkle Particle Aura (48 Particles per Stone)
+        // F. Glistening Sparkle Particle Aura (48 Particles per Stone)
         const particleCount = 48;
         const particleGeom = new THREE.BufferGeometry();
         const pPositions = new Float32Array(particleCount * 3);
@@ -341,7 +465,10 @@
           group,
           mesh,
           coreMesh,
+          coreFlareSprite,
+          coreFlareMat,
           pointLight,
+          innerWhiteLight,
           auraSprite,
           auraMat,
           particles,
@@ -630,6 +757,11 @@
 
       const time = performance.now() * 0.001;
 
+      // Twinkle deep space starfield
+      if (this.starfield) {
+        this.starfield.material.opacity = 0.52 + Math.sin(time * 1.8) * 0.16;
+      }
+
       this.stones.forEach((stone, i) => {
         const isHovered = (this.hoveredIndex === i);
         const isSelected = (this.activeStone === stone.data.id);
@@ -637,7 +769,7 @@
         // Target scale handling
         let targetScale = 1.0;
         if (isSelected) {
-          targetScale = 1.20;
+          targetScale = 1.22;
         } else if (isHovered) {
           targetScale = 1.14;
         }
@@ -657,17 +789,24 @@
         stone.coreMesh.rotation.y -= stone.group.userData.rotSpeedY * speedMult * 1.6;
         stone.coreMesh.rotation.z += 0.003 * speedMult;
 
+        // Incandescent White-Hot Burning Core Flare Pulse (shines through translucent facets)
+        const corePulse = Math.sin(time * 4.4 + i * 1.6) * 0.18;
+        const coreScale = (isSelected ? 1.88 : (isHovered ? 1.68 : 1.42)) + corePulse;
+        stone.coreFlareSprite.scale.set(coreScale, coreScale, 1.0);
+        stone.coreFlareMat.opacity = (isSelected ? 1.0 : (isHovered ? 0.96 : 0.88)) + corePulse * 0.1;
+
         // Pulsing Point Light & Emissive Glow in Stone's Exact Color
         const pulse = Math.sin(time * 3.4 + i * 1.2) * 0.55;
-        stone.pointLight.intensity = (isSelected ? 4.8 : (isHovered ? 4.0 : 2.9)) + pulse;
-        stone.mesh.material.emissiveIntensity = (isSelected ? 0.88 : (isHovered ? 0.72 : 0.48)) + pulse * 0.20;
+        stone.pointLight.intensity = (isSelected ? 5.2 : (isHovered ? 4.5 : 3.4)) + pulse;
+        stone.innerWhiteLight.intensity = (isSelected ? 2.8 : (isHovered ? 2.4 : 1.8)) + pulse * 0.3;
+        stone.mesh.material.emissiveIntensity = (isSelected ? 0.88 : (isHovered ? 0.72 : 0.44)) + pulse * 0.18;
 
-        // Radial Aura Halo Scaling & Breathing Glow Pulse
-        const baseAuraScale = isSelected ? 5.2 : (isHovered ? 4.6 : 3.8);
+        // Radial Atmospheric Nebula Halo Scaling & Breathing Glow Pulse
+        const baseAuraScale = isSelected ? 5.4 : (isHovered ? 4.8 : 4.2);
         const auraPulse = Math.sin(time * 2.8 + i) * 0.25;
         const currentAuraScale = baseAuraScale + auraPulse;
         stone.auraSprite.scale.set(currentAuraScale, currentAuraScale, 1.0);
-        stone.auraMat.opacity = (isSelected ? 0.85 : (isHovered ? 0.72 : 0.48)) + auraPulse * 0.12;
+        stone.auraMat.opacity = (isSelected ? 0.85 : (isHovered ? 0.72 : 0.50)) + auraPulse * 0.12;
 
         // Glistening Sparkle Particles Simulation (3D orbits + twinkle)
         const pPos = stone.particles.geometry.attributes.position.array;
